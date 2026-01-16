@@ -30,6 +30,9 @@ export default function EstimateManager() {
   const [showAddItem, setShowAddItem] = useState(false);
   const [selectedMaterialId, setSelectedMaterialId] = useState<string>('');
   const [viewMode, setViewMode] = useState<'table' | 'edit'>('table');
+  const [filterProjectId, setFilterProjectId] = useState<string>('all');
+  const [filterDateFrom, setFilterDateFrom] = useState<string>('');
+  const [filterDateTo, setFilterDateTo] = useState<string>('');
 
   const [newEstimate, setNewEstimate] = useState({
     number: '',
@@ -63,9 +66,26 @@ export default function EstimateManager() {
   const filteredEstimates = estimates.filter((estimate) => {
     const searchLower = searchQuery.toLowerCase();
     const projectName = getProjectName(estimate.projectId).toLowerCase();
-    return estimate.number.toLowerCase().includes(searchLower) ||
+    
+    const matchesSearch = estimate.number.toLowerCase().includes(searchLower) ||
            estimate.name.toLowerCase().includes(searchLower) ||
            projectName.includes(searchLower);
+    
+    const matchesProject = filterProjectId === 'all' || estimate.projectId === filterProjectId;
+    
+    let matchesDateFrom = true;
+    if (filterDateFrom) {
+      const fromDate = new Date(filterDateFrom).getTime();
+      matchesDateFrom = estimate.date >= fromDate;
+    }
+    
+    let matchesDateTo = true;
+    if (filterDateTo) {
+      const toDate = new Date(filterDateTo).getTime() + 86400000;
+      matchesDateTo = estimate.date <= toDate;
+    }
+    
+    return matchesSearch && matchesProject && matchesDateFrom && matchesDateTo;
   });
 
   const handleAddEstimate = () => {
@@ -517,11 +537,83 @@ export default function EstimateManager() {
       {viewMode === 'table' && (
         <>
           <Card className="p-4">
-            <Input
-              placeholder="Поиск по номеру, названию или проекту..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
+            <div className="space-y-4">
+              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    <Icon name="Search" size={14} className="inline mr-1" />
+                    Поиск
+                  </label>
+                  <Input
+                    placeholder="Номер, название..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    <Icon name="FolderOpen" size={14} className="inline mr-1" />
+                    Проект
+                  </label>
+                  <select
+                    value={filterProjectId}
+                    onChange={(e) => setFilterProjectId(e.target.value)}
+                    className="w-full border rounded-md px-3 py-2"
+                  >
+                    <option value="all">Все проекты</option>
+                    {projects.map(project => (
+                      <option key={project.id} value={project.id}>{project.name}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    <Icon name="Calendar" size={14} className="inline mr-1" />
+                    Дата с
+                  </label>
+                  <Input
+                    type="date"
+                    value={filterDateFrom}
+                    onChange={(e) => setFilterDateFrom(e.target.value)}
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    <Icon name="Calendar" size={14} className="inline mr-1" />
+                    Дата по
+                  </label>
+                  <Input
+                    type="date"
+                    value={filterDateTo}
+                    onChange={(e) => setFilterDateTo(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              {(searchQuery || filterProjectId !== 'all' || filterDateFrom || filterDateTo) && (
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      setSearchQuery('');
+                      setFilterProjectId('all');
+                      setFilterDateFrom('');
+                      setFilterDateTo('');
+                    }}
+                  >
+                    <Icon name="X" size={14} className="mr-1" />
+                    Сбросить фильтры
+                  </Button>
+                  <span className="text-sm text-muted-foreground">
+                    Найдено: {filteredEstimates.length} из {estimates.length}
+                  </span>
+                </div>
+              )}
+            </div>
           </Card>
 
           <Card>
