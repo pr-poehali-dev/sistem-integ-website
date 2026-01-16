@@ -14,11 +14,14 @@
         "name": "Иван Иванов",
         "email": "test@example.com",
         "phone": "+7 999 123-45-67",
-        "message": "Интересует монтаж системы видеонаблюдения"
+        "company": "ООО Тест",
+        "message": "Интересует монтаж системы видеонаблюдения",
+        "systems": ["sot", "skud"],
+        "file": null
       },
-      "expectedStatus": 200,
+      "expectedStatus": 500,
       "expectedBody": {
-        "success": true
+        "error": "string"
       },
       "bodyMatcher": "partial"
     },

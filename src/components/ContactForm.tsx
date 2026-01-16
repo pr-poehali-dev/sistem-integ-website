@@ -25,12 +25,41 @@ export default function ContactForm() {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch('https://functions.poehali.dev/1db95115-ede2-420b-8b04-b8c8e34ae645', {
+      let fileData = null;
+      if (formData.file) {
+        const reader = new FileReader();
+        const filePromise = new Promise<string>((resolve, reject) => {
+          reader.onload = () => {
+            const base64 = (reader.result as string).split(',')[1];
+            resolve(base64);
+          };
+          reader.onerror = reject;
+          reader.readAsDataURL(formData.file!);
+        });
+        const base64Content = await filePromise;
+        fileData = {
+          name: formData.file.name,
+          type: formData.file.type,
+          content: base64Content
+        };
+      }
+
+      const requestData = {
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        company: formData.company,
+        message: formData.message,
+        systems: formData.systems,
+        file: fileData
+      };
+
+      const response = await fetch('https://functions.poehali.dev/c59964d9-2255-42f3-93ce-55264ab2dfdb', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(requestData),
       });
 
       const data = await response.json();
