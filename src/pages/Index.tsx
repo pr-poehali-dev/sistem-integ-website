@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Icon from '@/components/ui/icon';
+import ContactForm from '@/components/ContactForm';
 
 const solutions = [
   {
@@ -172,7 +173,7 @@ export default function Index() {
               <a href="#portfolio" className="text-sm font-medium hover:text-primary transition-colors">Портфолио</a>
               <a href="#certificates" className="text-sm font-medium hover:text-primary transition-colors">Сертификаты</a>
             </nav>
-            <Button className="hidden md:flex">
+            <Button className="hidden md:flex" onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}>
               <Icon name="Phone" size={16} className="mr-2" />
               Связаться
             </Button>
@@ -200,11 +201,11 @@ export default function Index() {
               Полный цикл работ от концепции до пусконаладки.
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
-              <Button size="lg" className="gap-2">
+              <Button size="lg" className="gap-2" onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}>
                 <Icon name="FileText" size={18} />
                 Получить консультацию
               </Button>
-              <Button size="lg" variant="outline" className="gap-2">
+              <Button size="lg" variant="outline" className="gap-2" onClick={() => document.getElementById('portfolio')?.scrollIntoView({ behavior: 'smooth' })}>
                 <Icon name="Play" size={18} />
                 Наши проекты
               </Button>
@@ -374,26 +375,58 @@ export default function Index() {
         </div>
       </section>
 
-      <section className="py-20 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-secondary/20"></div>
+      <section id="contact" className="py-20 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-secondary/10"></div>
         <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-3xl mx-auto text-center space-y-6">
-            <h3 className="text-3xl md:text-4xl font-heading font-bold">
+          <div className="text-center max-w-3xl mx-auto mb-12">
+            <Badge variant="outline" className="mb-4">
+              <Icon name="MessageSquare" size={14} className="mr-2" />
+              Связаться с нами
+            </Badge>
+            <h3 className="text-3xl md:text-4xl font-heading font-bold mb-4">
               Готовы начать проект?
             </h3>
-            <p className="text-lg text-muted-foreground">
-              Свяжитесь с нами для бесплатной консультации и расчета стоимости
+            <p className="text-muted-foreground">
+              Оставьте заявку и получите бесплатную консультацию эксперта
             </p>
-            <div className="flex flex-wrap gap-4 justify-center pt-4">
-              <Button size="lg" className="gap-2">
-                <Icon name="Mail" size={18} />
-                Написать нам
-              </Button>
-              <Button size="lg" variant="outline" className="gap-2">
-                <Icon name="Phone" size={18} />
-                +7 (495) 123-45-67
-              </Button>
-            </div>
+          </div>
+          
+          <ContactForm />
+
+          <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto mt-12">
+            <Card className="text-center hover:shadow-lg transition-all">
+              <CardContent className="pt-6">
+                <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-3">
+                  <Icon name="Phone" className="text-primary" size={24} />
+                </div>
+                <p className="font-medium mb-1">Телефон</p>
+                <a href="tel:+74951234567" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                  +7 (495) 123-45-67
+                </a>
+              </CardContent>
+            </Card>
+            <Card className="text-center hover:shadow-lg transition-all">
+              <CardContent className="pt-6">
+                <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-3">
+                  <Icon name="Mail" className="text-primary" size={24} />
+                </div>
+                <p className="font-medium mb-1">Email</p>
+                <a href="mailto:info@techintegrator.ru" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                  info@techintegrator.ru
+                </a>
+              </CardContent>
+            </Card>
+            <Card className="text-center hover:shadow-lg transition-all">
+              <CardContent className="pt-6">
+                <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-3">
+                  <Icon name="MapPin" className="text-primary" size={24} />
+                </div>
+                <p className="font-medium mb-1">Офис</p>
+                <p className="text-sm text-muted-foreground">
+                  Москва, ул. Примерная, 123
+                </p>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>
