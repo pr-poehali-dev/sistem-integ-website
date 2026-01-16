@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import Icon from '@/components/ui/icon';
-import HeroSection from '@/components/sections/HeroSection';
+import HeroSlider from '@/components/HeroSlider';
 import SolutionsSection from '@/components/sections/SolutionsSection';
 import AdvantagesSection from '@/components/sections/AdvantagesSection';
 import PortfolioSection from '@/components/sections/PortfolioSection';
@@ -69,7 +69,7 @@ export default function Index() {
         </div>
       </header>
 
-      <HeroSection />
+      <HeroSlider />
       
       <motion.div
         initial={{ opacity: 0, y: 50 }}
