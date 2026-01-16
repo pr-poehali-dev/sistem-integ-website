@@ -9,6 +9,7 @@ import Icon from '@/components/ui/icon';
 
 export default function ContactForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [agreedToPolicy, setAgreedToPolicy] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -78,6 +79,7 @@ export default function ContactForm() {
           systems: [],
           file: null
         });
+        setAgreedToPolicy(false);
       } else {
         toast({
           title: 'Ошибка',
@@ -274,11 +276,35 @@ export default function ContactForm() {
             </p>
           </div>
 
+          <div className="flex items-start space-x-3 p-4 border rounded-lg bg-muted/30">
+            <Checkbox
+              id="privacy-policy"
+              checked={agreedToPolicy}
+              onCheckedChange={(checked) => setAgreedToPolicy(checked as boolean)}
+              required
+            />
+            <label
+              htmlFor="privacy-policy"
+              className="text-sm leading-tight cursor-pointer"
+            >
+              Я согласен(на) с{' '}
+              <a
+                href="/privacy-policy"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary hover:underline font-medium"
+              >
+                политикой конфиденциальности
+              </a>
+              {' '}и даю согласие на обработку персональных данных <span className="text-destructive">*</span>
+            </label>
+          </div>
+
           <Button 
             type="submit" 
             size="lg" 
             className="w-full gap-2"
-            disabled={isSubmitting}
+            disabled={isSubmitting || !agreedToPolicy}
           >
             {isSubmitting ? (
               <>
@@ -292,10 +318,6 @@ export default function ContactForm() {
               </>
             )}
           </Button>
-
-          <p className="text-xs text-muted-foreground text-center">
-            Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности
-          </p>
         </form>
       </CardContent>
     </Card>
