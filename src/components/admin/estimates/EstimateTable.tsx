@@ -1,7 +1,13 @@
-import { Card, CardContent, CardHeader, CardTitle, Button, Input } from '@/components/ui/card';
+import { useState } from 'react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import Icon from '@/components/ui/icon';
 import type { Estimate } from '@/lib/estimate-manager';
 import type { Project } from '@/lib/project-manager';
+
+type SortField = 'number' | 'date' | 'name' | 'project' | 'items' | 'total';
+type SortDirection = 'asc' | 'desc';
 
 interface EstimateTableProps {
   estimates: Estimate[];
@@ -39,6 +45,53 @@ export default function EstimateTable({
   getProjectName
 }: EstimateTableProps) {
   const hasActiveFilters = searchQuery || filterProjectId !== 'all' || filterDateFrom || filterDateTo;
+  const [sortField, setSortField] = useState<SortField>('date');
+  const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
+
+  const handleSort = (field: SortField) => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortField(field);
+      setSortDirection('asc');
+    }
+  };
+
+  const sortedEstimates = [...estimates].sort((a, b) => {
+    let comparison = 0;
+
+    switch (sortField) {
+      case 'number':
+        comparison = a.number.localeCompare(b.number);
+        break;
+      case 'date':
+        comparison = a.date - b.date;
+        break;
+      case 'name':
+        comparison = a.name.localeCompare(b.name);
+        break;
+      case 'project':
+        comparison = getProjectName(a.projectId).localeCompare(getProjectName(b.projectId));
+        break;
+      case 'items':
+        comparison = a.items.length - b.items.length;
+        break;
+      case 'total':
+        comparison = a.totalCost - b.totalCost;
+        break;
+    }
+
+    return sortDirection === 'asc' ? comparison : -comparison;
+  });
+
+  const SortIcon = ({ field }: { field: SortField }) => {
+    if (sortField !== field) {
+      return <Icon name="ArrowUpDown" size={14} className="ml-1 opacity-30" />;
+    }
+    return sortDirection === 'asc' 
+      ? <Icon name="ArrowUp" size={14} className="ml-1" />
+      : <Icon name="ArrowDown" size={14} className="ml-1" />;
+  };
 
   return (
     <>
@@ -119,7 +172,7 @@ export default function EstimateTable({
 
       <Card>
         <CardContent className="p-0">
-          {estimates.length === 0 ? (
+          {sortedEstimates.length === 0 ? (
             <div className="p-8 text-center text-gray-500">
               <Icon name="FileText" size={48} className="mx-auto mb-4 opacity-50" />
               <p>Нет сметных расчетов</p>
@@ -129,17 +182,65 @@ export default function EstimateTable({
               <table className="w-full">
                 <thead>
                   <tr className="border-b bg-muted">
-                    <th className="text-left p-4 font-semibold">Номер</th>
-                    <th className="text-left p-4 font-semibold">Дата</th>
-                    <th className="text-left p-4 font-semibold">Название</th>
-                    <th className="text-left p-4 font-semibold">Проект</th>
-                    <th className="text-center p-4 font-semibold">Позиций</th>
-                    <th className="text-right p-4 font-semibold">Сумма, ₽</th>
+                    <th 
+                      className="text-left p-4 font-semibold cursor-pointer hover:bg-muted-foreground/10 transition-colors"
+                      onClick={() => handleSort('number')}
+                    >
+                      <div className="flex items-center">
+                        Номер
+                        <SortIcon field="number" />
+                      </div>
+                    </th>
+                    <th 
+                      className="text-left p-4 font-semibold cursor-pointer hover:bg-muted-foreground/10 transition-colors"
+                      onClick={() => handleSort('date')}
+                    >
+                      <div className="flex items-center">
+                        Дата
+                        <SortIcon field="date" />
+                      </div>
+                    </th>
+                    <th 
+                      className="text-left p-4 font-semibold cursor-pointer hover:bg-muted-foreground/10 transition-colors"
+                      onClick={() => handleSort('name')}
+                    >
+                      <div className="flex items-center">
+                        Название
+                        <SortIcon field="name" />
+                      </div>
+                    </th>
+                    <th 
+                      className="text-left p-4 font-semibold cursor-pointer hover:bg-muted-foreground/10 transition-colors"
+                      onClick={() => handleSort('project')}
+                    >
+                      <div className="flex items-center">
+                        Проект
+                        <SortIcon field="project" />
+                      </div>
+                    </th>
+                    <th 
+                      className="text-center p-4 font-semibold cursor-pointer hover:bg-muted-foreground/10 transition-colors"
+                      onClick={() => handleSort('items')}
+                    >
+                      <div className="flex items-center justify-center">
+                        Позиций
+                        <SortIcon field="items" />
+                      </div>
+                    </th>
+                    <th 
+                      className="text-right p-4 font-semibold cursor-pointer hover:bg-muted-foreground/10 transition-colors"
+                      onClick={() => handleSort('total')}
+                    >
+                      <div className="flex items-center justify-end">
+                        Сумма, ₽
+                        <SortIcon field="total" />
+                      </div>
+                    </th>
                     <th className="text-center p-4 font-semibold">Действия</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {estimates.map((estimate) => (
+                  {sortedEstimates.map((estimate) => (
                     <tr key={estimate.id} className="border-b hover:bg-muted/50 transition-colors">
                       <td className="p-4 font-mono font-semibold">{estimate.number}</td>
                       <td className="p-4 text-sm text-muted-foreground">
@@ -179,12 +280,12 @@ export default function EstimateTable({
                 </tbody>
                 <tfoot>
                   <tr className="bg-muted font-semibold">
-                    <td colSpan={4} className="p-4 text-right">Всего смет: {estimates.length}</td>
+                    <td colSpan={4} className="p-4 text-right">Всего смет: {sortedEstimates.length}</td>
                     <td className="p-4 text-center">
-                      {estimates.reduce((sum, est) => sum + est.items.length, 0)}
+                      {sortedEstimates.reduce((sum, est) => sum + est.items.length, 0)}
                     </td>
                     <td className="p-4 text-right">
-                      {estimates.reduce((sum, est) => sum + est.totalCost, 0).toLocaleString()}
+                      {sortedEstimates.reduce((sum, est) => sum + est.totalCost, 0).toLocaleString()}
                     </td>
                     <td></td>
                   </tr>
