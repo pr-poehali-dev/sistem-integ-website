@@ -7,15 +7,18 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useEffect } from "react";
 import Index from "./pages/Index";
 import Admin from "./pages/Admin";
+import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import { initContent } from "./lib/content-manager";
+import { initUsers } from "./lib/user-manager";
 
 const queryClient = new QueryClient();
 
 const App = () => {
   useEffect(() => {
     initContent();
+    initUsers();
   }, []);
 
   return (
@@ -27,6 +30,7 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/admin" element={<Admin />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />

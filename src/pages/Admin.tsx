@@ -1,47 +1,47 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getContent, saveContent, checkPassword, changePassword, resetContent, type SiteContent } from '@/lib/content-manager';
+import { getContent, saveContent, resetContent, type SiteContent } from '@/lib/content-manager';
+import { initUsers, isAuthenticated, logoutUser, getCurrentUser, changePassword as changeUserPassword } from '@/lib/user-manager';
 import AdminLogin from '@/components/admin/AdminLogin';
 import AdminHeader from '@/components/admin/AdminHeader';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import AdminContentEditor from '@/components/admin/AdminContentEditor';
 import ImageManager from '@/components/admin/ImageManager';
+import UserManager from '@/components/admin/UserManager';
 import PasswordChangeModal from '@/components/admin/PasswordChangeModal';
 
 export default function Admin() {
   const navigate = useNavigate();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [authenticated, setAuthenticated] = useState(false);
+  const [currentUser, setCurrentUser] = useState<{id: string; name: string; role: string} | null>(null);
   const [content, setContent] = useState<SiteContent | null>(null);
-  const [activeTab, setActiveTab] = useState<'hero' | 'solutions' | 'advantages' | 'portfolio' | 'certificates' | 'contact' | 'images'>('images');
+  const [activeTab, setActiveTab] = useState<'hero' | 'solutions' | 'advantages' | 'portfolio' | 'certificates' | 'contact' | 'images' | 'users'>('images');
   const [showPasswordChange, setShowPasswordChange] = useState(false);
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
 
   useEffect(() => {
-    const auth = sessionStorage.getItem('admin_auth');
-    if (auth === 'true') {
-      setIsAuthenticated(true);
-      setContent(getContent());
+    initUsers();
+    if (isAuthenticated()) {
+      const user = getCurrentUser();
+      if (user) {
+        setAuthenticated(true);
+        setCurrentUser(user);
+        setContent(getContent());
+      }
     }
   }, []);
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (checkPassword(password)) {
-      setIsAuthenticated(true);
-      sessionStorage.setItem('admin_auth', 'true');
-      setContent(getContent());
-      setError('');
-    } else {
-      setError('Неверный пароль');
-    }
+  const handleLoginSuccess = (userId: string, userName: string, userRole: string) => {
+    setAuthenticated(true);
+    setCurrentUser({ id: userId, name: userName, role: userRole });
+    setContent(getContent());
   };
 
   const handleLogout = () => {
-    setIsAuthenticated(false);
-    sessionStorage.removeItem('admin_auth');
+    logoutUser();
+    setAuthenticated(false);
+    setCurrentUser(null);
     navigate('/');
   };
 
@@ -53,7 +53,7 @@ export default function Admin() {
   };
 
   const handlePasswordChange = () => {
-    if (changePassword(oldPassword, newPassword)) {
+    if (currentUser && changeUserPassword(currentUser.id, oldPassword, newPassword)) {
       alert('Пароль успешно изменен!');
       setShowPasswordChange(false);
       setOldPassword('');
@@ -71,14 +71,9 @@ export default function Admin() {
     }
   };
 
-  if (!isAuthenticated) {
+  if (!authenticated) {
     return (
-      <AdminLogin
-        password={password}
-        error={error}
-        onPasswordChange={setPassword}
-        onSubmit={handleLogin}
-      />
+      <AdminLogin onLoginSuccess={handleLoginSuccess} />
     );
   }
 
@@ -92,6 +87,7 @@ export default function Admin() {
         onPreview={() => navigate('/')}
         onSave={handleSave}
         onLogout={handleLogout}
+        userName={currentUser?.name}
       />
 
       {showPasswordChange && (
@@ -111,6 +107,12 @@ export default function Admin() {
           <main className="lg:col-span-3">
             {activeTab === 'images' ? (
               <ImageManager />
+            ) : activeTab === 'users' && currentUser?.role === 'admin' ? (
+              <UserManager />
+            ) : activeTab === 'users' ? (
+              <div className="text-center py-12 text-muted-foreground">
+                Доступ запрещен. Только администраторы могут управлять пользователями.
+              </div>
             ) : (
               <AdminContentEditor
                 activeTab={activeTab}

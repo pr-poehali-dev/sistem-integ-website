@@ -7,13 +7,17 @@ interface AdminHeaderProps {
   onPreview: () => void;
   onSave: () => void;
   onLogout: () => void;
+  userName?: string;
 }
 
-export default function AdminHeader({ onPasswordChange, onReset, onPreview, onSave, onLogout }: AdminHeaderProps) {
+export default function AdminHeader({ onPasswordChange, onReset, onPreview, onSave, onLogout, userName }: AdminHeaderProps) {
   return (
     <header className="bg-white border-b sticky top-0 z-10">
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-        <h1 className="text-xl font-bold text-gray-900">Управление сайтом</h1>
+        <div>
+          <h1 className="text-xl font-bold text-gray-900">Управление сайтом</h1>
+          {userName && <p className="text-sm text-muted-foreground">Привет, {userName}</p>}
+        </div>
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" onClick={onPasswordChange}>
             <Icon name="Key" size={16} className="mr-2" />
