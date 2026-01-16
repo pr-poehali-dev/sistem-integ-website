@@ -67,8 +67,11 @@ export default function Index() {
                 alt="СистемКрафт" 
                 className="h-14 w-auto mb-4 transition-transform duration-300 hover:scale-105"
               />
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-muted-foreground mb-3">
                 Строим системы и сети
+              </p>
+              <p className="text-xs text-muted-foreground">
+                На рынке с 2009 года
               </p>
             </div>
             <div>
