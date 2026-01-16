@@ -13,6 +13,7 @@ import LegalEntityManager from '@/components/admin/LegalEntityManager';
 import PersonManager from '@/components/admin/PersonManager';
 import UnitManager from '@/components/admin/UnitManager';
 import BankManager from '@/components/admin/BankManager';
+import MaterialManager from '@/components/admin/MaterialManager';
 import PasswordChangeModal from '@/components/admin/PasswordChangeModal';
 
 export default function Admin() {
@@ -20,7 +21,7 @@ export default function Admin() {
   const [authenticated, setAuthenticated] = useState(false);
   const [currentUser, setCurrentUser] = useState<{id: string; name: string; role: string} | null>(null);
   const [content, setContent] = useState<SiteContent | null>(null);
-  const [activeTab, setActiveTab] = useState<'hero' | 'solutions' | 'advantages' | 'portfolio' | 'certificates' | 'contact' | 'images' | 'users' | 'projects' | 'legal-entities' | 'persons' | 'units' | 'banks'>('images');
+  const [activeTab, setActiveTab] = useState<'hero' | 'solutions' | 'advantages' | 'portfolio' | 'certificates' | 'contact' | 'images' | 'users' | 'projects' | 'legal-entities' | 'persons' | 'units' | 'banks' | 'materials'>('images');
   const [showPasswordChange, setShowPasswordChange] = useState(false);
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -147,6 +148,12 @@ export default function Admin() {
             ) : activeTab === 'banks' ? (
               <div className="text-center py-12 text-muted-foreground">
                 Доступ запрещен. Только администраторы могут управлять банками.
+              </div>
+            ) : activeTab === 'materials' && currentUser?.role === 'admin' ? (
+              <MaterialManager />
+            ) : activeTab === 'materials' ? (
+              <div className="text-center py-12 text-muted-foreground">
+                Доступ запрещен. Только администраторы могут управлять материалами и оборудованием.
               </div>
             ) : (
               <AdminContentEditor
