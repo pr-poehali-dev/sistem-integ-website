@@ -10,7 +10,7 @@ import Admin from "./pages/Admin";
 import ResetPassword from "./pages/ResetPassword";
 import UserDashboard from "./pages/UserDashboard";
 import UserLogin from "./components/UserLogin";
-import NotFound from "./pages/NotFound";
+import Custom404 from "./pages/Custom404";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import { initContent } from "./lib/content-manager";
 import { initUsers } from "./lib/user-manager";
@@ -37,7 +37,7 @@ const App = () => {
             <Route path="/dashboard" element={<UserDashboard />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
+            <Route path="*" element={<Custom404 />} />
           </Routes>
         </BrowserRouter>
       </TooltipProvider>
