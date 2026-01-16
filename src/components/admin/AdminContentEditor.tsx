@@ -78,40 +78,25 @@ export default function AdminContentEditor({ activeTab, content, onContentChange
 
       {activeTab === 'solutions' && (
         <div className="space-y-6">
-          <h2 className="text-2xl font-bold">Решения</h2>
-          <div>
-            <label className="block text-sm font-medium mb-2">Заголовок раздела</label>
-            <Input
-              value={content.solutions.title}
-              onChange={(e) => onContentChange({ ...content, solutions: { ...content.solutions, title: e.target.value } })}
-            />
-          </div>
+          <h2 className="text-2xl font-bold">Системы и сети</h2>
+          <p className="text-sm text-muted-foreground">
+            Список систем на сайте статичный (СКС, САПС, СОУЭ и др.). Здесь можно изменить общие настройки раздела.
+          </p>
           <div className="space-y-4">
-            {content.solutions.items.map((item, index) => (
-              <Card key={item.id} className="p-4">
-                <div className="space-y-3">
-                  <Input
-                    placeholder="Название"
-                    value={item.title}
-                    onChange={(e) => {
-                      const newItems = [...content.solutions.items];
-                      newItems[index].title = e.target.value;
-                      onContentChange({ ...content, solutions: { ...content.solutions, items: newItems } });
-                    }}
-                  />
-                  <Textarea
-                    placeholder="Описание"
-                    value={item.description}
-                    onChange={(e) => {
-                      const newItems = [...content.solutions.items];
-                      newItems[index].description = e.target.value;
-                      onContentChange({ ...content, solutions: { ...content.solutions, items: newItems } });
-                    }}
-                    rows={2}
-                  />
-                </div>
-              </Card>
-            ))}
+            <div>
+              <label className="block text-sm font-medium mb-2">Заголовок раздела</label>
+              <Input
+                value={content.solutions.title}
+                onChange={(e) => onContentChange({ ...content, solutions: { ...content.solutions, title: e.target.value } })}
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-2">Badge (метка раздела)</label>
+              <Input
+                value={content.solutions.badge}
+                onChange={(e) => onContentChange({ ...content, solutions: { ...content.solutions, badge: e.target.value } })}
+              />
+            </div>
           </div>
         </div>
       )}
