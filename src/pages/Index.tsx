@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button';
 import Icon from '@/components/ui/icon';
 import HeroSection from '@/components/sections/HeroSection';
 import SolutionsSection from '@/components/sections/SolutionsSection';
+import AdvantagesSection from '@/components/sections/AdvantagesSection';
 import PortfolioSection from '@/components/sections/PortfolioSection';
 import CertificatesSection from '@/components/sections/CertificatesSection';
 import ContactSection from '@/components/sections/ContactSection';
@@ -42,6 +43,7 @@ export default function Index() {
 
       <HeroSection />
       <SolutionsSection />
+      <AdvantagesSection />
       <PortfolioSection />
       <CertificatesSection />
       <ContactSection />
