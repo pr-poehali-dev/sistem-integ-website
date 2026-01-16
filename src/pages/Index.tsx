@@ -60,6 +60,12 @@ export default function Index() {
                   <span className="font-semibold">{content.contact.phone}</span>
                 </a>
               </Button>
+              <Button className="hidden sm:flex" size="sm" variant="outline" asChild>
+                <a href="/login" className="gap-2">
+                  <Icon name="User" size={16} />
+                  Личный кабинет
+                </a>
+              </Button>
               <Button className="hidden md:flex" size="sm" onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}>
                 <Icon name="Send" size={16} className="mr-2" />
                 Оставить заявку
@@ -156,6 +162,7 @@ export default function Index() {
                 <li><a href="#portfolio" className="hover:text-primary transition-colors">Портфолио</a></li>
                 <li><a href="#certificates" className="hover:text-primary transition-colors">Сертификаты и лицензии</a></li>
                 <li><a href="#contact" className="hover:text-primary transition-colors">Контакты</a></li>
+                <li><a href="/login" className="hover:text-primary transition-colors">Личный кабинет</a></li>
                 <li><a href="/privacy-policy" className="hover:text-primary transition-colors">Политика конфиденциальности</a></li>
               </ul>
             </div>
