@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import Icon from '@/components/ui/icon';
+import Dropzone from '@/components/ui/dropzone';
 import { getImages, getImagesByCategory, uploadImageToBase64, saveImage, deleteImage, type StoredImage } from '@/lib/image-storage';
 import { useToast } from '@/hooks/use-toast';
 
@@ -44,8 +45,7 @@ export default function ImagePicker({ value, onChange, category, label = "Изо
     }
   };
 
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
+  const handleFilesUpload = async (files: File[]) => {
     if (!files || files.length === 0) return;
 
     setIsUploading(true);
@@ -81,7 +81,12 @@ export default function ImagePicker({ value, onChange, category, label = "Изо
         description: `Загружено ${successCount} изображений`
       });
     }
+  };
 
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+    await handleFilesUpload(Array.from(files));
     e.target.value = '';
   };
 
@@ -193,12 +198,21 @@ export default function ImagePicker({ value, onChange, category, label = "Изо
             </div>
           </div>
 
+          <Dropzone
+            onFilesSelected={handleFilesUpload}
+            accept="image/*"
+            multiple
+            disabled={isUploading}
+            maxSize={10 * 1024 * 1024}
+            className="mb-4"
+          />
+
           <div className="max-h-96 overflow-y-auto">
             {images.length === 0 ? (
               <div className="text-center py-8 text-muted-foreground">
                 <Icon name="ImageOff" size={48} className="mx-auto mb-2 opacity-20" />
                 <p>Нет изображений</p>
-                <p className="text-sm">Загрузите изображения для использования</p>
+                <p className="text-sm">Перетащите сюда или загрузите</p>
               </div>
             ) : (
               <div className="grid grid-cols-3 gap-2">

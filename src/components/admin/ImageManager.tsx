@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import Icon from '@/components/ui/icon';
+import Dropzone from '@/components/ui/dropzone';
 import { 
   getImages, 
   saveImage, 
@@ -43,31 +44,49 @@ export default function ImageManager() {
     loadImages();
   }, [searchQuery, selectedCategory]);
 
-  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
+  const handleFilesUpload = async (files: File[]) => {
     if (!files || files.length === 0) return;
 
     setIsUploading(true);
+    let successCount = 0;
+    let errorCount = 0;
     
     try {
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
-        const base64 = await uploadImageToBase64(file);
-        
-        saveImage({
-          name: file.name,
-          url: base64,
-          size: file.size,
-          category: 'other',
-          tags: []
-        });
+        try {
+          const base64 = await uploadImageToBase64(file);
+          
+          saveImage({
+            name: file.name,
+            url: base64,
+            size: file.size,
+            category: 'other',
+            tags: []
+          });
+          successCount++;
+        } catch (error) {
+          errorCount++;
+          console.error(`Ошибка загрузки ${file.name}:`, error);
+        }
       }
       
       loadImages();
-      toast({
-        title: 'Успешно загружено',
-        description: `Загружено изображений: ${files.length}`,
-      });
+      
+      if (successCount > 0) {
+        toast({
+          title: 'Успешно загружено',
+          description: `Загружено изображений: ${successCount}${errorCount > 0 ? `, ошибок: ${errorCount}` : ''}`,
+        });
+      }
+      
+      if (errorCount > 0 && successCount === 0) {
+        toast({
+          title: 'Ошибка загрузки',
+          description: `Не удалось загрузить ${errorCount} файлов`,
+          variant: 'destructive',
+        });
+      }
     } catch (error) {
       toast({
         title: 'Ошибка загрузки',
@@ -76,8 +95,14 @@ export default function ImageManager() {
       });
     } finally {
       setIsUploading(false);
-      e.target.value = '';
     }
+  };
+
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+    await handleFilesUpload(Array.from(files));
+    e.target.value = '';
   };
 
   const handleDelete = (id: string) => {
@@ -178,11 +203,19 @@ export default function ImageManager() {
               </div>
             </div>
 
+            <Dropzone
+              onFilesSelected={handleFilesUpload}
+              accept="image/*"
+              multiple
+              disabled={isUploading}
+              maxSize={10 * 1024 * 1024}
+            />
+
             {images.length === 0 ? (
               <div className="text-center py-12 text-muted-foreground">
                 <Icon name="Image" size={48} className="mx-auto mb-4 opacity-20" />
                 <p>Нет изображений</p>
-                <p className="text-sm">Загрузите первое изображение</p>
+                <p className="text-sm">Перетащите изображения или нажмите кнопку загрузки</p>
               </div>
             ) : (
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
