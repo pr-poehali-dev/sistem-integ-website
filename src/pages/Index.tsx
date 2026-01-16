@@ -175,15 +175,23 @@ export default function Index() {
                 className="h-16 w-auto transition-transform duration-300 hover:scale-105 cursor-pointer"
               />
             </div>
-            <nav className="hidden md:flex gap-6">
+            <nav className="hidden md:flex gap-6 items-center">
               <a href="#solutions" className="text-sm font-medium hover:text-primary transition-colors">Решения</a>
               <a href="#portfolio" className="text-sm font-medium hover:text-primary transition-colors">Портфолио</a>
               <a href="#certificates" className="text-sm font-medium hover:text-primary transition-colors">Сертификаты</a>
             </nav>
-            <Button className="hidden md:flex" onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}>
-              <Icon name="Phone" size={16} className="mr-2" />
-              Связаться
-            </Button>
+            <div className="flex gap-2">
+              <Button className="hidden md:flex" variant="outline" asChild>
+                <a href="tel:+73433799888">
+                  <Icon name="Phone" size={16} className="mr-2" />
+                  +7 (343) 379-98-88
+                </a>
+              </Button>
+              <Button className="hidden md:flex" onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}>
+                <Icon name="Mail" size={16} className="mr-2" />
+                Заявка
+              </Button>
+            </div>
           </div>
         </div>
       </header>
@@ -452,6 +460,36 @@ export default function Index() {
                 </p>
               </CardContent>
             </Card>
+          </div>
+
+          <div className="mt-16">
+            <h4 className="text-2xl font-heading font-bold mb-6 text-center">Как нас найти</h4>
+            <div className="rounded-xl overflow-hidden border border-border shadow-lg hover:shadow-2xl transition-shadow duration-300">
+              <iframe 
+                src="https://yandex.ru/map-widget/v1/?ll=60.630559%2C56.787834&mode=search&ol=geo&ouri=ymapsbm1%3A%2F%2Fgeo%3Fdata%3DCgg1MzExNDMyNRJL0KDQvtGB0YHQuNGPLCDQldC60LDRgtC10YDQuNC90LHRg9GA0LMsINGD0LvQuNGG0LAg0JrRgNC10YHRgtC40L3RgdC60L7Qs9C%2BICQ2JUEiCg23D0BCFbmZYEI%2C&z=17" 
+                width="100%" 
+                height="400" 
+                frameBorder="0"
+                allowFullScreen={true}
+                className="w-full"
+                title="Карта офиса"
+              ></iframe>
+            </div>
+            <div className="text-center mt-6">
+              <p className="text-sm text-muted-foreground mb-2">
+                г. Екатеринбург, ул. Крестинского, 46А, офис 702
+              </p>
+              <Button variant="outline" asChild className="mt-2">
+                <a 
+                  href="https://yandex.ru/maps/54/yekaterinburg/house/ulitsa_krestinskogo_46a/YkkYcARgTEUBQFtsfXt5dnRhbA==/" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                >
+                  <Icon name="MapPin" size={16} className="mr-2" />
+                  Открыть в Яндекс.Картах
+                </a>
+              </Button>
+            </div>
           </div>
         </div>
       </section>
