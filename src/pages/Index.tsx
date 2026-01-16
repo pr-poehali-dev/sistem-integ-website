@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Icon from '@/components/ui/icon';
 import ContactForm from '@/components/ContactForm';
+import ProjectGallery from '@/components/ProjectGallery';
 
 const solutions = [
   {
@@ -445,6 +446,25 @@ export default function Index() {
               </Button>
             </div>
           )}
+        </div>
+      </section>
+
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <Badge variant="outline" className="mb-4">
+              <Icon name="Camera" size={14} className="mr-2" />
+              Галерея
+            </Badge>
+            <h3 className="text-3xl md:text-4xl font-heading font-bold mb-4">
+              Фото с объектов
+            </h3>
+            <p className="text-muted-foreground">
+              Реальные объекты, на которых мы реализовали инженерные системы
+            </p>
+          </div>
+
+          <ProjectGallery />
         </div>
       </section>
 
