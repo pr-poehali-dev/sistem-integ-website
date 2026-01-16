@@ -15,13 +15,14 @@ import UnitManager from '@/components/admin/UnitManager';
 import BankManager from '@/components/admin/BankManager';
 import MaterialManager from '@/components/admin/MaterialManager';
 import PasswordChangeModal from '@/components/admin/PasswordChangeModal';
+import TitlePageEditor from '@/components/documents/TitlePageEditor';
 
 export default function Admin() {
   const navigate = useNavigate();
   const [authenticated, setAuthenticated] = useState(false);
   const [currentUser, setCurrentUser] = useState<{id: string; name: string; role: string} | null>(null);
   const [content, setContent] = useState<SiteContent | null>(null);
-  const [activeTab, setActiveTab] = useState<'hero' | 'solutions' | 'advantages' | 'portfolio' | 'certificates' | 'contact' | 'images' | 'users' | 'projects' | 'legal-entities' | 'persons' | 'units' | 'banks' | 'materials'>('images');
+  const [activeTab, setActiveTab] = useState<'hero' | 'solutions' | 'advantages' | 'portfolio' | 'certificates' | 'contact' | 'images' | 'users' | 'projects' | 'legal-entities' | 'persons' | 'units' | 'banks' | 'materials' | 'documents'>('images');
   const [showPasswordChange, setShowPasswordChange] = useState(false);
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -154,6 +155,12 @@ export default function Admin() {
             ) : activeTab === 'materials' ? (
               <div className="text-center py-12 text-muted-foreground">
                 Доступ запрещен. Только администраторы могут управлять материалами и оборудованием.
+              </div>
+            ) : activeTab === 'documents' && currentUser?.role === 'admin' ? (
+              <TitlePageEditor />
+            ) : activeTab === 'documents' ? (
+              <div className="text-center py-12 text-muted-foreground">
+                Доступ запрещен. Только администраторы могут управлять документами.
               </div>
             ) : (
               <AdminContentEditor
