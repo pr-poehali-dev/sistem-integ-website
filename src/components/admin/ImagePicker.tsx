@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import Icon from '@/components/ui/icon';
-import { getImages, getImagesByCategory, uploadImageToBase64, saveImage, type StoredImage } from '@/lib/image-storage';
+import { getImages, getImagesByCategory, uploadImageToBase64, saveImage, deleteImage, type StoredImage } from '@/lib/image-storage';
 import { useToast } from '@/hooks/use-toast';
 
 interface ImagePickerProps {
@@ -18,6 +18,7 @@ export default function ImagePicker({ value, onChange, category, label = "Изо
   const [images, setImages] = useState<StoredImage[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [isUploading, setIsUploading] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -97,6 +98,37 @@ export default function ImagePicker({ value, onChange, category, label = "Изо
     onChange(url);
   };
 
+  const handleDeleteImage = async (e: React.MouseEvent, imageId: string, imageUrl: string) => {
+    e.stopPropagation();
+    
+    if (!confirm('Удалить это изображение из галереи?')) {
+      return;
+    }
+
+    setDeletingId(imageId);
+    
+    const success = deleteImage(imageId);
+    
+    if (success) {
+      if (value === imageUrl) {
+        onChange('');
+      }
+      loadImages();
+      toast({
+        title: 'Удалено',
+        description: 'Изображение удалено из галереи'
+      });
+    } else {
+      toast({
+        title: 'Ошибка',
+        description: 'Не удалось удалить изображение',
+        variant: 'destructive'
+      });
+    }
+    
+    setDeletingId(null);
+  };
+
   return (
     <div className="space-y-2">
       <label className="block text-sm font-medium">{label}</label>
@@ -167,21 +199,35 @@ export default function ImagePicker({ value, onChange, category, label = "Изо
             ) : (
               <div className="grid grid-cols-3 gap-2">
                 {images.map((image) => (
-                  <button
+                  <div
                     key={image.id}
-                    type="button"
-                    onClick={() => handleSelectImage(image.url)}
                     className="relative aspect-square rounded-lg overflow-hidden border-2 border-transparent hover:border-primary transition-all group"
                   >
-                    <img
-                      src={image.url}
-                      alt={image.name}
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                      <Icon name="Check" size={24} className="text-white" />
-                    </div>
-                  </button>
+                    <button
+                      type="button"
+                      onClick={() => handleSelectImage(image.url)}
+                      className="w-full h-full"
+                    >
+                      <img
+                        src={image.url}
+                        alt={image.name}
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <Icon name="Check" size={24} className="text-white" />
+                      </div>
+                    </button>
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      size="sm"
+                      onClick={(e) => handleDeleteImage(e, image.id, image.url)}
+                      disabled={deletingId === image.id}
+                      className="absolute top-1 right-1 w-7 h-7 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <Icon name="Trash2" size={14} />
+                    </Button>
+                  </div>
                 ))}
               </div>
             )}
