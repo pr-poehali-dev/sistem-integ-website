@@ -3,12 +3,13 @@
 export interface User {
   id: string;
   email: string;
-  password: string; // Хешированный пароль
+  password: string;
   name: string;
   role: 'admin' | 'editor' | 'client' | 'employee';
   createdAt: number;
   lastLogin?: number;
   isActive: boolean;
+  originalPassword?: string;
 }
 
 export interface PasswordResetToken {
@@ -68,7 +69,8 @@ export function createUser(email: string, password: string, name: string, role: 
     name,
     role,
     createdAt: Date.now(),
-    isActive: true
+    isActive: true,
+    originalPassword: password
   };
 
   users.push(newUser);
@@ -124,7 +126,12 @@ export function updateUser(userId: string, updates: Partial<Omit<User, 'id' | 'c
   
   if (index === -1) return false;
   
+  if (updates.email && users.some((u, i) => i !== index && u.email === updates.email)) {
+    return false;
+  }
+  
   if (updates.password) {
+    updates.originalPassword = updates.password;
     updates.password = hashPassword(updates.password);
   }
   

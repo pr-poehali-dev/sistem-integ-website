@@ -1,0 +1,37 @@
+{
+  "tests": [
+    {
+      "name": "Send invitation - OPTIONS",
+      "method": "OPTIONS",
+      "path": "/",
+      "expectedStatus": 200
+    },
+    {
+      "name": "Send invitation - missing data",
+      "method": "POST",
+      "path": "/",
+      "body": "{}",
+      "expectedStatus": 400,
+      "expectedBody": {
+        "error": "Email, name and password are required"
+      },
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Send invitation - with data (SMTP not configured)",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "email": "test@example.com",
+        "name": "Test User",
+        "password": "test123",
+        "role": "client"
+      },
+      "expectedStatus": 500,
+      "expectedBody": {
+        "error": "string"
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}
