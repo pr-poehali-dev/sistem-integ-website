@@ -5,6 +5,7 @@ import AdminLogin from '@/components/admin/AdminLogin';
 import AdminHeader from '@/components/admin/AdminHeader';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import AdminContentEditor from '@/components/admin/AdminContentEditor';
+import ImageManager from '@/components/admin/ImageManager';
 import PasswordChangeModal from '@/components/admin/PasswordChangeModal';
 
 export default function Admin() {
@@ -13,7 +14,7 @@ export default function Admin() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [content, setContent] = useState<SiteContent | null>(null);
-  const [activeTab, setActiveTab] = useState<'hero' | 'solutions' | 'advantages' | 'portfolio' | 'certificates' | 'contact'>('hero');
+  const [activeTab, setActiveTab] = useState<'hero' | 'solutions' | 'advantages' | 'portfolio' | 'certificates' | 'contact' | 'images'>('images');
   const [showPasswordChange, setShowPasswordChange] = useState(false);
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -108,11 +109,15 @@ export default function Admin() {
         <div className="grid lg:grid-cols-4 gap-6">
           <AdminSidebar activeTab={activeTab} onTabChange={setActiveTab} />
           <main className="lg:col-span-3">
-            <AdminContentEditor
-              activeTab={activeTab}
-              content={content}
-              onContentChange={setContent}
-            />
+            {activeTab === 'images' ? (
+              <ImageManager />
+            ) : (
+              <AdminContentEditor
+                activeTab={activeTab}
+                content={content}
+                onContentChange={setContent}
+              />
+            )}
           </main>
         </div>
       </div>
