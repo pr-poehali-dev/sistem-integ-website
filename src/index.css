@@ -46,6 +46,28 @@
   body {
     @apply bg-background text-foreground;
     font-family: "Inter", sans-serif;
+    background-image: url("https://cdn.poehali.dev/projects/ba346666-f951-41e2-90b9-6e184cc6589c/files/42e8f5e9-f7e0-4938-ab81-7ff0aafb30a1.jpg");
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
+    position: relative;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.92);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  body > * {
+    position: relative;
+    z-index: 1;
   }
 
   h1,
