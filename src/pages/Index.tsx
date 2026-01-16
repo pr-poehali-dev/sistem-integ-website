@@ -163,7 +163,7 @@ export default function Index() {
               <img 
                 src="https://cdn.poehali.dev/files/LOGO TEXT SYSTEMCRAFT.png" 
                 alt="СистемКрафт" 
-                className="h-12 w-auto"
+                className="h-16 w-auto"
               />
             </div>
             <nav className="hidden md:flex gap-6">
@@ -436,7 +436,7 @@ export default function Index() {
               <img 
                 src="https://cdn.poehali.dev/files/LOGO TEXT SYSTEMCRAFT.png" 
                 alt="СистемКрафт" 
-                className="h-10 w-auto mb-4"
+                className="h-14 w-auto mb-4"
               />
               <p className="text-sm text-muted-foreground">
                 Строим системы и сети
