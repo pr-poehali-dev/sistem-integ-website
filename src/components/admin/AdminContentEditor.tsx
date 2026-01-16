@@ -3,6 +3,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Icon from '@/components/ui/icon';
+import ImagePicker from '@/components/admin/ImagePicker';
 import type { SiteContent } from '@/lib/content-manager';
 
 type TabId = 'hero' | 'solutions' | 'advantages' | 'portfolio' | 'certificates' | 'contact';
@@ -18,30 +19,59 @@ export default function AdminContentEditor({ activeTab, content, onContentChange
     <Card className="p-6">
       {activeTab === 'hero' && (
         <div className="space-y-6">
-          <h2 className="text-2xl font-bold">Главный экран</h2>
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium mb-2">Заголовок</label>
-              <Input
-                value={content.hero.title}
-                onChange={(e) => onContentChange({ ...content, hero: { ...content.hero, title: e.target.value } })}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-2">Подзаголовок</label>
-              <Input
-                value={content.hero.subtitle}
-                onChange={(e) => onContentChange({ ...content, hero: { ...content.hero, subtitle: e.target.value } })}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-2">Описание</label>
-              <Textarea
-                value={content.hero.description}
-                onChange={(e) => onContentChange({ ...content, hero: { ...content.hero, description: e.target.value } })}
-                rows={3}
-              />
-            </div>
+          <h2 className="text-2xl font-bold">Слайдер на главной</h2>
+          <div className="space-y-6">
+            {content.hero.slides.map((slide, index) => (
+              <Card key={slide.id} className="p-4">
+                <h3 className="font-semibold mb-4">Слайд {index + 1}: {slide.title}</h3>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Заголовок (badge)</label>
+                    <Input
+                      value={slide.title}
+                      onChange={(e) => {
+                        const newSlides = [...content.hero.slides];
+                        newSlides[index].title = e.target.value;
+                        onContentChange({ ...content, hero: { ...content.hero, slides: newSlides } });
+                      }}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Подзаголовок</label>
+                    <Input
+                      value={slide.subtitle}
+                      onChange={(e) => {
+                        const newSlides = [...content.hero.slides];
+                        newSlides[index].subtitle = e.target.value;
+                        onContentChange({ ...content, hero: { ...content.hero, slides: newSlides } });
+                      }}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Описание</label>
+                    <Textarea
+                      value={slide.description}
+                      onChange={(e) => {
+                        const newSlides = [...content.hero.slides];
+                        newSlides[index].description = e.target.value;
+                        onContentChange({ ...content, hero: { ...content.hero, slides: newSlides } });
+                      }}
+                      rows={3}
+                    />
+                  </div>
+                  <ImagePicker
+                    label="Изображение слайда"
+                    value={slide.image}
+                    category="slider"
+                    onChange={(url) => {
+                      const newSlides = [...content.hero.slides];
+                      newSlides[index].image = url;
+                      onContentChange({ ...content, hero: { ...content.hero, slides: newSlides } });
+                    }}
+                  />
+                </div>
+              </Card>
+            ))}
           </div>
         </div>
       )}
@@ -196,12 +226,13 @@ export default function AdminContentEditor({ activeTab, content, onContentChange
                     }}
                     rows={2}
                   />
-                  <Input
-                    placeholder="URL изображения"
+                  <ImagePicker
+                    label="Изображение проекта"
                     value={project.image}
-                    onChange={(e) => {
+                    category="portfolio"
+                    onChange={(url) => {
                       const newProjects = [...content.portfolio.projects];
-                      newProjects[index].image = e.target.value;
+                      newProjects[index].image = url;
                       onContentChange({ ...content, portfolio: { ...content.portfolio, projects: newProjects } });
                     }}
                   />
@@ -261,12 +292,13 @@ export default function AdminContentEditor({ activeTab, content, onContentChange
                       onContentChange({ ...content, certificates: { ...content.certificates, items: newCerts } });
                     }}
                   />
-                  <Input
-                    placeholder="URL изображения"
+                  <ImagePicker
+                    label="Изображение сертификата"
                     value={cert.image}
-                    onChange={(e) => {
+                    category="certificates"
+                    onChange={(url) => {
                       const newCerts = [...content.certificates.items];
-                      newCerts[index].image = e.target.value;
+                      newCerts[index].image = url;
                       onContentChange({ ...content, certificates: { ...content.certificates, items: newCerts } });
                     }}
                   />
