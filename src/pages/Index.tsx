@@ -14,6 +14,7 @@ import { motion } from 'framer-motion';
 
 export default function Index() {
   const [content, setContent] = useState(getContent());
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleUpdate = () => setContent(getContent());
@@ -70,9 +71,85 @@ export default function Index() {
                 <Icon name="Send" size={16} className="mr-2" />
                 Оставить заявку
               </Button>
+              <Button 
+                className="lg:hidden" 
+                size="sm" 
+                variant="ghost"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              >
+                <Icon name={mobileMenuOpen ? "X" : "Menu"} size={24} />
+              </Button>
             </div>
           </div>
         </div>
+        
+        {mobileMenuOpen && (
+          <motion.div 
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="lg:hidden border-t border-border/40 bg-background"
+          >
+            <nav className="container mx-auto px-4 py-4 flex flex-col gap-2">
+              <a 
+                href="#solutions" 
+                className="px-4 py-3 text-sm font-medium rounded-lg hover:bg-primary/10 hover:text-primary transition-all"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Системы и сети
+              </a>
+              <a 
+                href="#portfolio" 
+                className="px-4 py-3 text-sm font-medium rounded-lg hover:bg-primary/10 hover:text-primary transition-all"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Портфолио
+              </a>
+              <a 
+                href="#certificates" 
+                className="px-4 py-3 text-sm font-medium rounded-lg hover:bg-primary/10 hover:text-primary transition-all"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Сертификаты
+              </a>
+              <a 
+                href="#contact" 
+                className="px-4 py-3 text-sm font-medium rounded-lg hover:bg-primary/10 hover:text-primary transition-all"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Контакты
+              </a>
+              <div className="border-t border-border/40 mt-2 pt-2">
+                <a 
+                  href="/login" 
+                  className="px-4 py-3 text-sm font-medium rounded-lg hover:bg-primary/10 hover:text-primary transition-all flex items-center gap-2"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <Icon name="User" size={16} />
+                  Личный кабинет
+                </a>
+                <a 
+                  href={`tel:${content.contact.phone.replace(/[^0-9+]/g, '')}`}
+                  className="px-4 py-3 text-sm font-medium rounded-lg hover:bg-primary/10 hover:text-primary transition-all flex items-center gap-2"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <Icon name="Phone" size={16} />
+                  {content.contact.phone}
+                </a>
+                <button 
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="w-full px-4 py-3 text-sm font-medium rounded-lg hover:bg-primary/10 hover:text-primary transition-all flex items-center gap-2"
+                >
+                  <Icon name="Send" size={16} />
+                  Оставить заявку
+                </button>
+              </div>
+            </nav>
+          </motion.div>
+        )}
       </header>
 
       <HeroSlider />
