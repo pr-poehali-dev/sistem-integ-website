@@ -129,23 +129,22 @@ export default function ImageManager() {
                 onChange={handleFileSelect}
                 disabled={isUploading}
               />
-              <label htmlFor="file-upload">
-                <Button asChild disabled={isUploading}>
-                  <span className="cursor-pointer">
-                    {isUploading ? (
-                      <>
-                        <Icon name="Loader2" className="animate-spin mr-2" size={16} />
-                        Загрузка...
-                      </>
-                    ) : (
-                      <>
-                        <Icon name="Upload" className="mr-2" size={16} />
-                        Загрузить изображения
-                      </>
-                    )}
-                  </span>
-                </Button>
-              </label>
+              <Button 
+                disabled={isUploading}
+                onClick={() => document.getElementById('file-upload')?.click()}
+              >
+                {isUploading ? (
+                  <>
+                    <Icon name="Loader2" className="animate-spin mr-2" size={16} />
+                    Загрузка...
+                  </>
+                ) : (
+                  <>
+                    <Icon name="Upload" className="mr-2" size={16} />
+                    Загрузить изображения
+                  </>
+                )}
+              </Button>
             </div>
           </div>
         </CardHeader>

@@ -171,8 +171,9 @@ export default function ImagePicker({ value, onChange, category, label = "Изо
               onChange={(e) => handleSearch(e.target.value)}
               className="flex-1"
             />
-            <label>
+            <div>
               <input
+                id="image-picker-upload"
                 type="file"
                 multiple
                 accept="image/*"
@@ -180,13 +181,16 @@ export default function ImagePicker({ value, onChange, category, label = "Изо
                 className="hidden"
                 disabled={isUploading}
               />
-              <Button type="button" variant="outline" disabled={isUploading} asChild>
-                <span>
-                  <Icon name="Upload" size={16} className="mr-2" />
-                  {isUploading ? 'Загрузка...' : 'Загрузить'}
-                </span>
+              <Button 
+                type="button" 
+                variant="outline" 
+                disabled={isUploading}
+                onClick={() => document.getElementById('image-picker-upload')?.click()}
+              >
+                <Icon name="Upload" size={16} className="mr-2" />
+                {isUploading ? 'Загрузка...' : 'Загрузить'}
               </Button>
-            </label>
+            </div>
           </div>
 
           <div className="max-h-96 overflow-y-auto">
