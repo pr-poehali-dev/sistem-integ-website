@@ -8,6 +8,8 @@ import { useEffect } from "react";
 import Index from "./pages/Index";
 import Admin from "./pages/Admin";
 import ResetPassword from "./pages/ResetPassword";
+import UserDashboard from "./pages/UserDashboard";
+import UserLogin from "./components/UserLogin";
 import NotFound from "./pages/NotFound";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import { initContent } from "./lib/content-manager";
@@ -31,6 +33,8 @@ const App = () => {
             <Route path="/" element={<Index />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/login" element={<UserLogin />} />
+            <Route path="/dashboard" element={<UserDashboard />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />

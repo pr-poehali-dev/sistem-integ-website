@@ -1,0 +1,30 @@
+{
+  "tests": [
+    {
+      "name": "Get user projects - OPTIONS",
+      "method": "OPTIONS",
+      "path": "/",
+      "expectedStatus": 200
+    },
+    {
+      "name": "Get user projects - missing email",
+      "method": "GET",
+      "path": "/",
+      "expectedStatus": 400,
+      "expectedBody": {
+        "error": "string"
+      },
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Get user projects - with email",
+      "method": "GET",
+      "path": "/?email=test@example.com",
+      "expectedStatus": 200,
+      "expectedBody": {
+        "userEmail": "test@example.com"
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}

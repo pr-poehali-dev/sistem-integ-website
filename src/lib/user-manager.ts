@@ -5,7 +5,7 @@ export interface User {
   email: string;
   password: string; // Хешированный пароль
   name: string;
-  role: 'admin' | 'editor';
+  role: 'admin' | 'editor' | 'client' | 'employee';
   createdAt: number;
   lastLogin?: number;
   isActive: boolean;
@@ -54,7 +54,7 @@ function saveUsers(users: User[]) {
   localStorage.setItem(USERS_KEY, JSON.stringify(users));
 }
 
-export function createUser(email: string, password: string, name: string, role: 'admin' | 'editor' = 'editor'): User | null {
+export function createUser(email: string, password: string, name: string, role: 'admin' | 'editor' | 'client' | 'employee' = 'editor'): User | null {
   const users = getUsers();
   
   if (users.find(u => u.email === email)) {

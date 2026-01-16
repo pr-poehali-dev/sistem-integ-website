@@ -8,6 +8,8 @@ import AdminSidebar from '@/components/admin/AdminSidebar';
 import AdminContentEditor from '@/components/admin/AdminContentEditor';
 import ImageManager from '@/components/admin/ImageManager';
 import UserManager from '@/components/admin/UserManager';
+import ProjectManager from '@/components/admin/ProjectManager';
+import LegalEntityManager from '@/components/admin/LegalEntityManager';
 import PasswordChangeModal from '@/components/admin/PasswordChangeModal';
 
 export default function Admin() {
@@ -15,7 +17,7 @@ export default function Admin() {
   const [authenticated, setAuthenticated] = useState(false);
   const [currentUser, setCurrentUser] = useState<{id: string; name: string; role: string} | null>(null);
   const [content, setContent] = useState<SiteContent | null>(null);
-  const [activeTab, setActiveTab] = useState<'hero' | 'solutions' | 'advantages' | 'portfolio' | 'certificates' | 'contact' | 'images' | 'users'>('images');
+  const [activeTab, setActiveTab] = useState<'hero' | 'solutions' | 'advantages' | 'portfolio' | 'certificates' | 'contact' | 'images' | 'users' | 'projects' | 'legal-entities'>('images');
   const [showPasswordChange, setShowPasswordChange] = useState(false);
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -112,6 +114,18 @@ export default function Admin() {
             ) : activeTab === 'users' ? (
               <div className="text-center py-12 text-muted-foreground">
                 Доступ запрещен. Только администраторы могут управлять пользователями.
+              </div>
+            ) : activeTab === 'projects' && currentUser?.role === 'admin' ? (
+              <ProjectManager />
+            ) : activeTab === 'projects' ? (
+              <div className="text-center py-12 text-muted-foreground">
+                Доступ запрещен. Только администраторы могут управлять проектами.
+              </div>
+            ) : activeTab === 'legal-entities' && currentUser?.role === 'admin' ? (
+              <LegalEntityManager />
+            ) : activeTab === 'legal-entities' ? (
+              <div className="text-center py-12 text-muted-foreground">
+                Доступ запрещен. Только администраторы могут управлять юрлицами.
               </div>
             ) : (
               <AdminContentEditor

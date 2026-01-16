@@ -1,7 +1,7 @@
 import { Card } from '@/components/ui/card';
 import Icon from '@/components/ui/icon';
 
-type TabId = 'hero' | 'solutions' | 'advantages' | 'portfolio' | 'certificates' | 'contact' | 'images' | 'users';
+type TabId = 'hero' | 'solutions' | 'advantages' | 'portfolio' | 'certificates' | 'contact' | 'images' | 'users' | 'projects' | 'legal-entities';
 
 interface AdminSidebarProps {
   activeTab: TabId;
@@ -18,6 +18,8 @@ export default function AdminSidebar({ activeTab, onTabChange }: AdminSidebarPro
     { id: 'certificates' as TabId, label: 'Сертификаты', icon: 'Shield' },
     { id: 'contact' as TabId, label: 'Контакты', icon: 'Phone' },
     { id: 'users' as TabId, label: 'Пользователи', icon: 'Users' },
+    { id: 'projects' as TabId, label: 'Проекты', icon: 'FolderOpen' },
+    { id: 'legal-entities' as TabId, label: 'Юрлица', icon: 'Building2' },
   ];
 
   return (
