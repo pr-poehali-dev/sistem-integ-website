@@ -40,9 +40,11 @@ export default function UserLogin() {
     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50 flex items-center justify-center p-4">
       <Card className="w-full max-w-md p-8">
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-orange-100 rounded-full mb-4">
-            <Icon name="User" size={32} className="text-orange-600" />
-          </div>
+          <img 
+            src="https://cdn.poehali.dev/files/LOGO TEXT SYSTEMCRAFT.png" 
+            alt="СистемКрафт" 
+            className="h-16 w-auto mx-auto mb-6"
+          />
           <h1 className="text-2xl font-bold text-gray-900">Личный кабинет</h1>
           <p className="text-gray-600 mt-2">Войдите для просмотра своих проектов</p>
         </div>
