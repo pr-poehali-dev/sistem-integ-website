@@ -156,7 +156,7 @@ export default function Index() {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="border-b border-border/40 backdrop-blur-sm sticky top-0 z-50">
+      <header className="border-b border-border/40 backdrop-blur-sm sticky top-0 z-50 bg-background/80 transition-all duration-300">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -179,9 +179,8 @@ export default function Index() {
         </div>
       </header>
 
-      <section className="relative py-20 md:py-32 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-background to-secondary/20"></div>
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjA1KSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyaWQpIi8+PC9zdmc+')] opacity-30"></div>
+      <section className="relative py-20 md:py-32 overflow-hidden bg-gradient-to-br from-primary/5 via-background to-muted">
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgwLDApLDAsMC4wMykiIHN0cm9rZS13aWR0aD0iMSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmlkKSIvPjwvc3ZnPg==')] opacity-40"></div>
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-4xl mx-auto text-center space-y-8 animate-fade-in">
             <Badge variant="secondary" className="px-4 py-2">
@@ -209,17 +208,17 @@ export default function Index() {
               </Button>
             </div>
             <div className="grid grid-cols-3 gap-8 pt-8 max-w-2xl mx-auto">
-              <div>
-                <div className="text-3xl font-heading font-bold text-primary">250+</div>
-                <div className="text-sm text-muted-foreground mt-1">Реализованных проектов</div>
+              <div className="group cursor-default">
+                <div className="text-3xl font-heading font-bold text-primary transition-all duration-300 group-hover:scale-110">250+</div>
+                <div className="text-sm text-muted-foreground mt-1 transition-colors group-hover:text-foreground">Реализованных проектов</div>
               </div>
-              <div>
-                <div className="text-3xl font-heading font-bold text-primary">15+</div>
-                <div className="text-sm text-muted-foreground mt-1">Лет на рынке</div>
+              <div className="group cursor-default">
+                <div className="text-3xl font-heading font-bold text-primary transition-all duration-300 group-hover:scale-110">15+</div>
+                <div className="text-sm text-muted-foreground mt-1 transition-colors group-hover:text-foreground">Лет на рынке</div>
               </div>
-              <div>
-                <div className="text-3xl font-heading font-bold text-primary">98%</div>
-                <div className="text-sm text-muted-foreground mt-1">Довольных клиентов</div>
+              <div className="group cursor-default">
+                <div className="text-3xl font-heading font-bold text-primary transition-all duration-300 group-hover:scale-110">98%</div>
+                <div className="text-sm text-muted-foreground mt-1 transition-colors group-hover:text-foreground">Довольных клиентов</div>
               </div>
             </div>
           </div>
@@ -245,13 +244,13 @@ export default function Index() {
             {solutions.map((solution, index) => (
               <Card 
                 key={solution.id}
-                className="group hover:shadow-xl hover:shadow-primary/10 transition-all duration-300 cursor-pointer hover:scale-[1.02] hover:border-primary/50 animate-scale-in"
+                className="group hover:shadow-2xl hover:shadow-primary/20 transition-all duration-500 cursor-pointer hover:scale-[1.05] hover:border-primary hover:-translate-y-2 animate-scale-in bg-card/50 backdrop-blur-sm"
                 style={{ animationDelay: `${index * 0.1}s` }}
                 onClick={() => setSelectedSolution(solution.id)}
               >
                 <CardHeader>
-                  <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                    <Icon name={solution.icon as any} className="text-primary" size={28} />
+                  <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center mb-4 group-hover:scale-125 group-hover:rotate-6 transition-all duration-500 group-hover:bg-primary">
+                    <Icon name={solution.icon as any} className="text-primary group-hover:text-white transition-colors duration-500" size={28} />
                   </div>
                   <CardTitle className="text-xl font-heading">{solution.title}</CardTitle>
                   <CardDescription className="text-xs font-medium text-muted-foreground/80">
@@ -291,8 +290,8 @@ export default function Index() {
 
           <div className="grid md:grid-cols-2 gap-8">
             {portfolio.map((project, index) => (
-              <Card key={index} className="overflow-hidden group hover:shadow-xl transition-all duration-300 animate-slide-up" style={{ animationDelay: `${index * 0.15}s` }}>
-                <div className="aspect-video bg-gradient-to-br from-primary/30 to-secondary/30 flex items-center justify-center text-8xl group-hover:scale-110 transition-transform duration-500">
+              <Card key={index} className="overflow-hidden group hover:shadow-2xl hover:shadow-primary/20 transition-all duration-500 cursor-pointer hover:-translate-y-2 animate-slide-up" style={{ animationDelay: `${index * 0.15}s` }}>
+                <div className="aspect-video bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center text-8xl group-hover:scale-125 group-hover:rotate-3 transition-all duration-700">
                   {project.image}
                 </div>
                 <CardHeader>
@@ -344,10 +343,10 @@ export default function Index() {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {certificates.map((cert, index) => (
-              <Card key={index} className="text-center hover:shadow-lg transition-all duration-300 hover:scale-[1.02] animate-fade-in" style={{ animationDelay: `${index * 0.1}s` }}>
+              <Card key={index} className="group text-center hover:shadow-2xl hover:shadow-primary/20 transition-all duration-500 hover:scale-105 hover:-translate-y-2 animate-fade-in cursor-pointer" style={{ animationDelay: `${index * 0.1}s` }}>
                 <CardHeader>
-                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center mx-auto mb-4">
-                    <Icon name={cert.icon as any} className="text-primary" size={32} />
+                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 group-hover:bg-primary transition-all duration-500">
+                    <Icon name={cert.icon as any} className="text-primary group-hover:text-white transition-colors duration-500" size={32} />
                   </div>
                   <CardTitle className="text-lg font-heading">{cert.title}</CardTitle>
                   <CardDescription>{cert.description}</CardDescription>
@@ -360,11 +359,13 @@ export default function Index() {
           </div>
 
           <div className="mt-12 text-center">
-            <Card className="inline-block px-8 py-6 bg-gradient-to-r from-primary/10 to-secondary/10 border-primary/30">
+            <Card className="inline-block px-8 py-6 bg-gradient-to-r from-primary/10 to-primary/5 border-primary/30 hover:shadow-xl hover:shadow-primary/20 hover:scale-105 transition-all duration-500 cursor-pointer group">
               <div className="flex items-center gap-4">
-                <Icon name="ShieldCheck" className="text-primary" size={40} />
+                <div className="group-hover:scale-110 group-hover:rotate-12 transition-all duration-500">
+                  <Icon name="ShieldCheck" className="text-primary" size={40} />
+                </div>
                 <div className="text-left">
-                  <p className="font-heading font-bold text-lg">Гарантия качества</p>
+                  <p className="font-heading font-bold text-lg group-hover:text-primary transition-colors">Гарантия качества</p>
                   <p className="text-sm text-muted-foreground">На все виды работ от 2 до 5 лет</p>
                 </div>
               </div>
@@ -392,10 +393,10 @@ export default function Index() {
           <ContactForm />
 
           <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto mt-12">
-            <Card className="text-center hover:shadow-lg transition-all">
+            <Card className="group text-center hover:shadow-2xl hover:shadow-primary/20 transition-all duration-500 hover:scale-105 hover:-translate-y-2 cursor-pointer">
               <CardContent className="pt-6">
-                <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-3">
-                  <Icon name="Phone" className="text-primary" size={24} />
+                <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-3 group-hover:bg-primary group-hover:scale-110 transition-all duration-500">
+                  <Icon name="Phone" className="text-primary group-hover:text-white transition-colors duration-500" size={24} />
                 </div>
                 <p className="font-medium mb-1">Телефон</p>
                 <a href="tel:+74951234567" className="text-sm text-muted-foreground hover:text-primary transition-colors">
@@ -403,10 +404,10 @@ export default function Index() {
                 </a>
               </CardContent>
             </Card>
-            <Card className="text-center hover:shadow-lg transition-all">
+            <Card className="group text-center hover:shadow-2xl hover:shadow-primary/20 transition-all duration-500 hover:scale-105 hover:-translate-y-2 cursor-pointer">
               <CardContent className="pt-6">
-                <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-3">
-                  <Icon name="Mail" className="text-primary" size={24} />
+                <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-3 group-hover:bg-primary group-hover:scale-110 transition-all duration-500">
+                  <Icon name="Mail" className="text-primary group-hover:text-white transition-colors duration-500" size={24} />
                 </div>
                 <p className="font-medium mb-1">Email</p>
                 <a href="mailto:info@systemcraft.ru" className="text-sm text-muted-foreground hover:text-primary transition-colors">
@@ -414,10 +415,10 @@ export default function Index() {
                 </a>
               </CardContent>
             </Card>
-            <Card className="text-center hover:shadow-lg transition-all">
+            <Card className="group text-center hover:shadow-2xl hover:shadow-primary/20 transition-all duration-500 hover:scale-105 hover:-translate-y-2 cursor-pointer">
               <CardContent className="pt-6">
-                <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-3">
-                  <Icon name="MapPin" className="text-primary" size={24} />
+                <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-3 group-hover:bg-primary group-hover:scale-110 transition-all duration-500">
+                  <Icon name="MapPin" className="text-primary group-hover:text-white transition-colors duration-500" size={24} />
                 </div>
                 <p className="font-medium mb-1">Офис</p>
                 <p className="text-sm text-muted-foreground">
