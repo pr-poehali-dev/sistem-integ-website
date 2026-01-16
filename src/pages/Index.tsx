@@ -6,8 +6,18 @@ import AdvantagesSection from '@/components/sections/AdvantagesSection';
 import PortfolioSection from '@/components/sections/PortfolioSection';
 import CertificatesSection from '@/components/sections/CertificatesSection';
 import ContactSection from '@/components/sections/ContactSection';
+import { getContent } from '@/lib/content-manager';
+import { useState, useEffect } from 'react';
 
 export default function Index() {
+  const [content, setContent] = useState(getContent().contact);
+
+  useEffect(() => {
+    const handleUpdate = () => setContent(getContent().contact);
+    window.addEventListener('content-updated', handleUpdate);
+    return () => window.removeEventListener('content-updated', handleUpdate);
+  }, []);
+
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b border-border/40 backdrop-blur-sm sticky top-0 z-50 bg-background/80 transition-all duration-300">
@@ -27,9 +37,9 @@ export default function Index() {
             </nav>
             <div className="flex gap-2">
               <Button className="hidden md:flex" variant="outline" asChild>
-                <a href="tel:+73433799888">
+                <a href={`tel:${content.phone.replace(/[^0-9+]/g, '')}`}>
                   <Icon name="Phone" size={16} className="mr-2" />
-                  +7 (343) 379-98-88
+                  {content.phone}
                 </a>
               </Button>
               <Button className="hidden md:flex" onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}>

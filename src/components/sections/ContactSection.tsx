@@ -3,8 +3,18 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import Icon from '@/components/ui/icon';
 import ContactForm from '@/components/ContactForm';
+import { getContent } from '@/lib/content-manager';
+import { useState, useEffect } from 'react';
 
 export default function ContactSection() {
+  const [content, setContent] = useState(getContent().contact);
+
+  useEffect(() => {
+    const handleUpdate = () => setContent(getContent().contact);
+    window.addEventListener('content-updated', handleUpdate);
+    return () => window.removeEventListener('content-updated', handleUpdate);
+  }, []);
+
   return (
     <section id="contact" className="py-20">
       <div className="container mx-auto px-4">
@@ -14,7 +24,7 @@ export default function ContactSection() {
             Связь
           </Badge>
           <h3 className="text-3xl md:text-4xl font-heading font-bold mb-4">
-            Свяжитесь с нами
+            {content.title}
           </h3>
           <p className="text-muted-foreground">
             Готовы обсудить ваш проект. Оставьте заявку, и мы свяжемся с вами в ближайшее время
@@ -30,10 +40,9 @@ export default function ContactSection() {
                 <Icon name="Phone" className="text-primary group-hover:text-white transition-colors duration-500" size={24} />
               </div>
               <p className="font-medium mb-1">Телефон</p>
-              <a href="tel:+73433799888" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                +7 (343) 379-98-88
+              <a href={`tel:${content.phone.replace(/[^0-9+]/g, '')}`} className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                {content.phone}
               </a>
-              <p className="text-xs text-muted-foreground/70 mt-1">Многоканальный</p>
             </CardContent>
           </Card>
           <Card className="group text-center hover:shadow-2xl hover:shadow-primary/20 transition-all duration-500 hover:scale-105 hover:-translate-y-2 cursor-pointer">
@@ -42,8 +51,8 @@ export default function ContactSection() {
                 <Icon name="Mail" className="text-primary group-hover:text-white transition-colors duration-500" size={24} />
               </div>
               <p className="font-medium mb-1">Email</p>
-              <a href="mailto:info@systemcraft.ru" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                info@systemcraft.ru
+              <a href={`mailto:${content.email}`} className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                {content.email}
               </a>
             </CardContent>
           </Card>
@@ -54,7 +63,7 @@ export default function ContactSection() {
               </div>
               <p className="font-medium mb-1">Офис</p>
               <p className="text-sm text-muted-foreground">
-                г. Екатеринбург, ул. Крестинского, 46А, офис 702
+                {content.address}
               </p>
             </CardContent>
           </Card>

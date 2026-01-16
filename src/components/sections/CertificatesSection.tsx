@@ -1,6 +1,8 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import Icon from '@/components/ui/icon';
+import { getContent } from '@/lib/content-manager';
+import { useState, useEffect } from 'react';
 
 const certificates = [
   {
@@ -42,6 +44,14 @@ const certificates = [
 ];
 
 export default function CertificatesSection() {
+  const [content, setContent] = useState(getContent().certificates);
+
+  useEffect(() => {
+    const handleUpdate = () => setContent(getContent().certificates);
+    window.addEventListener('content-updated', handleUpdate);
+    return () => window.removeEventListener('content-updated', handleUpdate);
+  }, []);
+
   return (
     <section id="certificates" className="py-20 bg-muted/30">
       <div className="container mx-auto px-4">
@@ -51,7 +61,7 @@ export default function CertificatesSection() {
             Квалификация
           </Badge>
           <h3 className="text-3xl md:text-4xl font-heading font-bold mb-4">
-            Сертификаты и лицензии
+            {content.title}
           </h3>
           <p className="text-muted-foreground">
             Подтвержденная экспертиза и соответствие международным стандартам
@@ -59,17 +69,17 @@ export default function CertificatesSection() {
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {certificates.map((cert, index) => (
-            <Card key={index} className="group text-center hover:shadow-2xl hover:shadow-primary/20 transition-all duration-500 hover:scale-105 hover:-translate-y-2 animate-fade-in cursor-pointer" style={{ animationDelay: `${index * 0.1}s` }}>
-              <CardHeader>
-                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 group-hover:bg-primary transition-all duration-500">
-                  <Icon name={cert.icon as any} className="text-primary group-hover:text-white transition-colors duration-500" size={32} />
-                </div>
+          {content.items.map((cert, index) => (
+            <Card key={cert.id} className="group text-center hover:shadow-2xl hover:shadow-primary/20 transition-all duration-500 hover:scale-105 hover:-translate-y-2 animate-fade-in cursor-pointer overflow-hidden" style={{ animationDelay: `${index * 0.1}s` }}>
+              <div className="aspect-[4/3] overflow-hidden">
+                <img 
+                  src={cert.image} 
+                  alt={cert.title}
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                />
+              </div>
+              <CardContent className="pt-6">
                 <CardTitle className="text-lg font-heading">{cert.title}</CardTitle>
-                <CardDescription>{cert.description}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Badge variant="secondary">Действителен с {cert.year}</Badge>
               </CardContent>
             </Card>
           ))}
