@@ -62,10 +62,15 @@ export default function Index() {
             <div>
               <h4 className="font-heading font-semibold mb-4">Решения</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><a href="#" className="hover:text-primary transition-colors">СКС</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">САПС</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">СКУД</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">СОТС</a></li>
+                <li><a href="#solutions" className="hover:text-primary transition-colors">СКС</a></li>
+                <li><a href="#solutions" className="hover:text-primary transition-colors">САПС</a></li>
+                <li><a href="#solutions" className="hover:text-primary transition-colors">СОУЭ</a></li>
+                <li><a href="#solutions" className="hover:text-primary transition-colors">СКУД</a></li>
+                <li><a href="#solutions" className="hover:text-primary transition-colors">СОТС</a></li>
+                <li><a href="#solutions" className="hover:text-primary transition-colors">СОТ</a></li>
+                <li><a href="#solutions" className="hover:text-primary transition-colors">АСКУЭ</a></li>
+                <li><a href="#solutions" className="hover:text-primary transition-colors">ЭОМ</a></li>
+                <li><a href="#solutions" className="hover:text-primary transition-colors">ОВИК</a></li>
               </ul>
             </div>
             <div>
