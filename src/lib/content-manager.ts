@@ -143,7 +143,7 @@ const DEFAULT_CONTENT: SiteContent = {
       },
       {
         id: "5",
-        title: "Гарантия до 5 лет",
+        title: "Гарантия до 25 лет",
         description: "Полная ответственность за качество работ",
         icon: "Shield",
       },
