@@ -14,8 +14,10 @@ import {
 import { getProjects, type Project } from '@/lib/project-manager';
 import { getUnits, type Unit } from '@/lib/unit-manager';
 import { getMaterials, type Material } from '@/lib/material-manager';
+import { getWorks, type Work } from '@/lib/work-manager';
 import EstimateForm from './estimates/EstimateForm';
 import EstimateEditor from './estimates/EstimateEditor';
+import EstimateFormNew from './estimates/EstimateFormNew';
 import EstimateTable from './estimates/EstimateTable';
 
 export default function EstimateManager() {
@@ -24,6 +26,7 @@ export default function EstimateManager() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [units, setUnits] = useState<Unit[]>([]);
   const [materials, setMaterials] = useState<Material[]>([]);
+  const [works, setWorks] = useState<Work[]>([]);
   const [showAddEstimate, setShowAddEstimate] = useState(false);
   const [editingEstimate, setEditingEstimate] = useState<Estimate | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -61,6 +64,7 @@ export default function EstimateManager() {
     setProjects(getProjects());
     setUnits(getUnits());
     setMaterials(getMaterials());
+    setWorks(getWorks());
   };
 
   const filteredEstimates = estimates.filter((estimate) => {
@@ -261,23 +265,15 @@ export default function EstimateManager() {
       )}
 
       {viewMode === 'edit' && editingEstimate && (
-        <EstimateEditor
+        <EstimateFormNew
           estimate={editingEstimate}
           projects={projects}
-          units={units}
           materials={materials}
-          showAddItem={showAddItem}
-          newItem={newItem}
-          selectedMaterialId={selectedMaterialId}
+          works={works}
+          units={units}
           onEstimateChange={setEditingEstimate}
-          onNewItemChange={setNewItem}
-          onSelectMaterial={handleSelectMaterial}
-          onAddItem={handleAddItemToEstimate}
-          onDeleteItem={handleDeleteItem}
-          onSetShowAddItem={setShowAddItem}
           onSave={handleUpdateEstimate}
           onCancel={() => { setEditingEstimate(null); setViewMode('table'); }}
-          getUnitName={getUnitName}
         />
       )}
 

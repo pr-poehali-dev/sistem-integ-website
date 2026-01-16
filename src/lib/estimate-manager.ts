@@ -1,11 +1,19 @@
+export interface EstimateItemWork {
+  id: string;
+  workId: string | null;
+  workName: string;
+  unitId: string | null;
+  quantity: number;
+  pricePerUnit: number | null;
+  totalCost: number | null;
+}
+
 export interface EstimateItem {
   id: string;
   number: number;
-  code: string;
-  name: string;
-  unitId: string | null;
-  quantity: number;
-  price: number | null;
+  materialId: string | null;
+  materialName: string;
+  works: EstimateItemWork[];
   totalCost: number | null;
   notes: string;
 }
@@ -81,11 +89,21 @@ export function getEstimateById(estimateId: string | null): Estimate | null {
 }
 
 export function createEstimateItem(data: Omit<EstimateItem, 'id' | 'totalCost'>): EstimateItem {
-  const totalCost = (data.price || 0) * data.quantity;
+  const totalCost = data.works.reduce((sum, work) => sum + (work.totalCost || 0), 0);
   
   return {
     ...data,
     id: 'item_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+    totalCost
+  };
+}
+
+export function createEstimateItemWork(data: Omit<EstimateItemWork, 'id' | 'totalCost'>): EstimateItemWork {
+  const totalCost = (data.pricePerUnit || 0) * data.quantity;
+  
+  return {
+    ...data,
+    id: 'work_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
     totalCost
   };
 }
