@@ -65,9 +65,9 @@ export interface SiteContent {
 
 const DEFAULT_CONTENT: SiteContent = {
   hero: {
-    title: "Надежные системы пожарной безопасности для вашего бизнеса",
-    subtitle: "Профессиональные решения от лицензированной компании",
-    description: "Проектирование, монтаж и обслуживание систем пожарной сигнализации и автоматического пожаротушения",
+    title: "Комплексная интеграция инженерных систем",
+    subtitle: "Инновационные технологии",
+    description: "Проектирование, комплектация и монтаж современных систем автоматизации зданий. Полный цикл работ от концепции до пусконаладки.",
   },
   about: {
     title: "О компании",
@@ -208,13 +208,13 @@ const DEFAULT_CONTENT: SiteContent = {
   },
   contact: {
     title: "Свяжитесь с нами",
-    phone: "+7 (495) 123-45-67",
-    email: "info@firesafety.ru",
-    address: "г. Москва, ул. Примерная, д. 1",
+    phone: "+7 (343) 379-98-88",
+    email: "info@systemcraft.ru",
+    address: "г. Екатеринбург, ул. Крестинского, 46А, офис 702",
     socials: {
-      vk: "https://vk.com/firesafety",
-      telegram: "https://t.me/firesafety",
-      whatsapp: "https://wa.me/79991234567",
+      vk: "https://vk.com/systemcraft",
+      telegram: "https://t.me/systemcraft",
+      whatsapp: "https://wa.me/73433799888",
     },
   },
 };
