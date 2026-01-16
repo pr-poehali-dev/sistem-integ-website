@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
 import Icon from '@/components/ui/icon';
 
@@ -13,7 +14,9 @@ export default function ContactForm() {
     email: '',
     phone: '',
     company: '',
-    message: ''
+    message: '',
+    systems: [] as string[],
+    file: null as File | null
   });
   const { toast } = useToast();
 
@@ -42,7 +45,9 @@ export default function ContactForm() {
           email: '',
           phone: '',
           company: '',
-          message: ''
+          message: '',
+          systems: [],
+          file: null
         });
       } else {
         toast({
@@ -68,6 +73,35 @@ export default function ContactForm() {
       [e.target.name]: e.target.value
     });
   };
+
+  const handleSystemToggle = (system: string) => {
+    setFormData({
+      ...formData,
+      systems: formData.systems.includes(system)
+        ? formData.systems.filter(s => s !== system)
+        : [...formData.systems, system]
+    });
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null;
+    setFormData({
+      ...formData,
+      file
+    });
+  };
+
+  const availableSystems = [
+    { id: 'sks', label: 'СКС - Структурированные кабельные системы' },
+    { id: 'saps', label: 'САПС - Система автоматической пожарной сигнализации' },
+    { id: 'soue', label: 'СОУЭ - Система оповещения и управления эвакуацией' },
+    { id: 'skud', label: 'СКУД - Система контроля и управления доступом' },
+    { id: 'sots', label: 'СОТС - Система охранно-тревожной сигнализации' },
+    { id: 'sot', label: 'СОТ - Система охранного телевидения' },
+    { id: 'askue', label: 'АСКУЭ - Автоматизированная система коммерческого учета электроэнергии' },
+    { id: 'eom', label: 'ЭОМ - Электрооборудование и молниезащита' },
+    { id: 'ovik', label: 'ОВИК - Отопление, вентиляция и кондиционирование' },
+  ];
 
   return (
     <Card className="max-w-2xl mx-auto">
@@ -147,6 +181,29 @@ export default function ContactForm() {
           </div>
 
           <div className="space-y-2">
+            <label className="text-sm font-medium">
+              Интересующие системы
+            </label>
+            <div className="grid md:grid-cols-2 gap-3 p-4 border rounded-lg bg-background">
+              {availableSystems.map((system) => (
+                <div key={system.id} className="flex items-start space-x-2">
+                  <Checkbox
+                    id={system.id}
+                    checked={formData.systems.includes(system.id)}
+                    onCheckedChange={() => handleSystemToggle(system.id)}
+                  />
+                  <label
+                    htmlFor={system.id}
+                    className="text-sm leading-tight cursor-pointer hover:text-primary transition-colors"
+                  >
+                    {system.label}
+                  </label>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="space-y-2">
             <label htmlFor="message" className="text-sm font-medium flex items-center gap-1">
               Сообщение <span className="text-destructive">*</span>
             </label>
@@ -155,11 +212,37 @@ export default function ContactForm() {
               name="message"
               value={formData.message}
               onChange={handleChange}
-              placeholder="Расскажите о вашем проекте и интересующих системах..."
+              placeholder="Расскажите о вашем проекте..."
               required
               rows={5}
               className="bg-background resize-none"
             />
+          </div>
+
+          <div className="space-y-2">
+            <label htmlFor="file" className="text-sm font-medium flex items-center gap-2">
+              <Icon name="Paperclip" size={16} />
+              Прикрепить файл
+            </label>
+            <div className="relative">
+              <Input
+                id="file"
+                name="file"
+                type="file"
+                onChange={handleFileChange}
+                className="bg-background cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-primary file:text-primary-foreground hover:file:bg-primary/90"
+                accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.zip"
+              />
+              {formData.file && (
+                <p className="text-xs text-muted-foreground mt-2 flex items-center gap-1">
+                  <Icon name="FileText" size={14} />
+                  {formData.file.name} ({Math.round(formData.file.size / 1024)} КБ)
+                </p>
+              )}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Поддерживаемые форматы: PDF, DOC, DOCX, JPG, PNG, ZIP. Максимальный размер: 10 МБ
+            </p>
           </div>
 
           <Button 
