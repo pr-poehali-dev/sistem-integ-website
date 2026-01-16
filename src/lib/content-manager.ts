@@ -1,22 +1,26 @@
-// Система управления контентом сайта
+// Оптимизированная система управления контентом сайта
+
+export interface HeroSlide {
+  id: string;
+  title: string;
+  subtitle: string;
+  description: string;
+  image: string;
+}
+
 export interface SiteContent {
-  hero: {
-    title: string;
-    subtitle: string;
-    description: string;
+  company: {
+    name: string;
+    legalName: string;
+    foundedYear: number;
+    tagline: string;
   };
-  about: {
-    title: string;
-    description: string;
+  hero: {
+    slides: HeroSlide[];
   };
   solutions: {
     title: string;
-    items: Array<{
-      id: string;
-      title: string;
-      description: string;
-      icon: string;
-    }>;
+    badge: string;
   };
   advantages: {
     title: string;
@@ -55,64 +59,69 @@ export interface SiteContent {
     phone: string;
     email: string;
     address: string;
+    telegram: string;
     socials: {
       vk?: string;
       telegram?: string;
       whatsapp?: string;
     };
   };
+  seo: {
+    title: string;
+    description: string;
+    keywords: string[];
+  };
 }
 
 const DEFAULT_CONTENT: SiteContent = {
-  hero: {
-    title: "Комплексная интеграция инженерных систем",
-    subtitle: "Инновационные технологии",
-    description: "Проектирование, комплектация и монтаж современных систем автоматизации зданий. Полный цикл работ от концепции до пусконаладки.",
+  company: {
+    name: "СистемКрафт",
+    legalName: "ООО Компания «Системкрафт»",
+    foundedYear: 2009,
+    tagline: "Строим системы и сети"
   },
-  about: {
-    title: "О компании",
-    description: "Мы специализируемся на комплексных решениях в области интеграции инженерных систем. Наша команда сертифицированных специалистов обеспечивает полный цикл работ от проектирования до технического обслуживания.",
+  hero: {
+    slides: [
+      {
+        id: 'sks',
+        title: 'СКС',
+        subtitle: 'Структурированные кабельные системы',
+        description: 'Современная кабельная инфраструктура с гарантией до 25 лет',
+        image: 'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=1920&h=800&fit=crop&q=80'
+      },
+      {
+        id: 'sot',
+        title: 'Видеонаблюдение',
+        subtitle: 'Система охранного телевидения',
+        description: 'IP-камеры 4K с интеллектуальной аналитикой и облачным хранением',
+        image: 'https://images.unsplash.com/photo-1557597774-9d273605dfa9?w=1920&h=800&fit=crop&q=80'
+      },
+      {
+        id: 'skud',
+        title: 'СКУД',
+        subtitle: 'Контроль и управление доступом',
+        description: 'Биометрия, карты доступа и учет рабочего времени',
+        image: 'https://images.unsplash.com/photo-1633265486064-086b219458ec?w=1920&h=800&fit=crop&q=80'
+      },
+      {
+        id: 'saps',
+        title: 'Пожарная безопасность',
+        subtitle: 'САПС и СОУЭ под ключ',
+        description: 'Автоматическая пожарная сигнализация и система оповещения',
+        image: 'https://images.unsplash.com/photo-1536859975388-c3407e9272b7?w=1920&h=800&fit=crop&q=80'
+      },
+      {
+        id: 'ovik',
+        title: 'ОВИК',
+        subtitle: 'Климатические системы',
+        description: 'Вентиляция, кондиционирование и отопление для комфорта',
+        image: 'https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=1920&h=800&fit=crop&q=80'
+      }
+    ]
   },
   solutions: {
-    title: "Наши решения",
-    items: [
-      {
-        id: "1",
-        title: "Пожарная сигнализация",
-        description: "Современные адресные и неадресные системы обнаружения возгораний",
-        icon: "Bell",
-      },
-      {
-        id: "2",
-        title: "Автоматическое пожаротушение",
-        description: "Водяные, газовые, порошковые и аэрозольные системы тушения",
-        icon: "Droplets",
-      },
-      {
-        id: "3",
-        title: "Система оповещения",
-        description: "СОУЭ для эвакуации людей при возникновении пожара",
-        icon: "Volume2",
-      },
-      {
-        id: "4",
-        title: "Дымоудаление",
-        description: "Системы противодымной защиты и управления эвакуацией",
-        icon: "Wind",
-      },
-      {
-        id: "5",
-        title: "Техническое обслуживание",
-        description: "Регулярное ТО и ремонт установленных систем",
-        icon: "Wrench",
-      },
-      {
-        id: "6",
-        title: "Проектирование",
-        description: "Разработка проектной документации по пожарной безопасности",
-        icon: "FileText",
-      },
-    ],
+    title: "Инженерные системы под ключ",
+    badge: "Системы и сети"
   },
   advantages: {
     title: "Почему выбирают нас",
@@ -180,7 +189,7 @@ const DEFAULT_CONTENT: SiteContent = {
       {
         id: "3",
         title: "Бизнес-центр «Башня»",
-        description: "Адресная система сигнализации на 30 этажей",
+        description: "Адресная система сигнализации на 30 этажов",
         image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&h=600&fit=crop",
         category: "Офисные здания",
       },
@@ -211,51 +220,85 @@ const DEFAULT_CONTENT: SiteContent = {
     phone: "+7 (343) 379-98-88",
     email: "info@systemcraft.ru",
     address: "г. Екатеринбург, ул. Крестинского, 46А, офис 702",
+    telegram: "https://t.me/systemcraft_ekb",
     socials: {
-      vk: "https://vk.com/systemcraft",
-      telegram: "https://t.me/systemcraft",
+      telegram: "https://t.me/systemcraft_ekb",
       whatsapp: "https://wa.me/73433799888",
     },
   },
+  seo: {
+    title: "СистемКрафт — Проектирование и монтаж инженерных систем в Екатеринбурге",
+    description: "Комплексная интеграция инженерных систем: СКС, СКУД, пожарная сигнализация, видеонаблюдение. Гарантия от 2 до 25 лет. На рынке с 2009 года.",
+    keywords: ["системкрафт", "инженерные системы", "СКС", "СКУД", "САПС", "СОУЭ", "видеонаблюдение", "монтаж систем", "екатеринбург"]
+  }
 };
 
-const STORAGE_KEY = 'site_content';
+const STORAGE_KEY = 'site_content_v2';
 const PASSWORD_KEY = 'admin_password';
+const VERSION = '2.0';
 
-// Инициализация контента
 export function initContent() {
   const stored = localStorage.getItem(STORAGE_KEY);
   if (!stored) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_CONTENT));
+    localStorage.setItem('content_version', VERSION);
+  } else {
+    const currentVersion = localStorage.getItem('content_version');
+    if (currentVersion !== VERSION) {
+      migrateContent(stored);
+    }
   }
   
-  // Установка дефолтного пароля (admin)
   const storedPassword = localStorage.getItem(PASSWORD_KEY);
   if (!storedPassword) {
-    localStorage.setItem(PASSWORD_KEY, btoa('admin')); // base64 encoded
+    localStorage.setItem(PASSWORD_KEY, btoa('admin'));
   }
 }
 
-// Получение контента
+function migrateContent(oldContent: string) {
+  try {
+    const old = JSON.parse(oldContent);
+    const migrated: SiteContent = {
+      ...DEFAULT_CONTENT,
+      ...old,
+      company: DEFAULT_CONTENT.company,
+      hero: DEFAULT_CONTENT.hero,
+      seo: DEFAULT_CONTENT.seo
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(migrated));
+    localStorage.setItem('content_version', VERSION);
+  } catch (e) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_CONTENT));
+    localStorage.setItem('content_version', VERSION);
+  }
+}
+
 export function getContent(): SiteContent {
   const stored = localStorage.getItem(STORAGE_KEY);
   return stored ? JSON.parse(stored) : DEFAULT_CONTENT;
 }
 
-// Сохранение контента
-export function saveContent(content: SiteContent) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(content));
-  // Генерируем событие для обновления компонентов
+export function saveContent(content: Partial<SiteContent>) {
+  const current = getContent();
+  const updated = { ...current, ...content };
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
   window.dispatchEvent(new CustomEvent('content-updated'));
 }
 
-// Проверка пароля
+export function updateSection<K extends keyof SiteContent>(
+  section: K, 
+  data: Partial<SiteContent[K]>
+) {
+  const content = getContent();
+  content[section] = { ...content[section], ...data } as SiteContent[K];
+  saveContent(content);
+}
+
 export function checkPassword(password: string): boolean {
   const stored = localStorage.getItem(PASSWORD_KEY);
   return stored === btoa(password);
 }
 
-// Смена пароля
 export function changePassword(oldPassword: string, newPassword: string): boolean {
   if (!checkPassword(oldPassword)) {
     return false;
@@ -264,8 +307,22 @@ export function changePassword(oldPassword: string, newPassword: string): boolea
   return true;
 }
 
-// Сброс к дефолтному контенту
 export function resetContent() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_CONTENT));
+  localStorage.setItem('content_version', VERSION);
   window.dispatchEvent(new CustomEvent('content-updated'));
+}
+
+export function exportContent(): string {
+  return JSON.stringify(getContent(), null, 2);
+}
+
+export function importContent(jsonString: string): boolean {
+  try {
+    const content = JSON.parse(jsonString);
+    saveContent(content);
+    return true;
+  } catch {
+    return false;
+  }
 }

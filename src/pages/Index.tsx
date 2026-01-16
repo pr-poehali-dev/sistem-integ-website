@@ -13,10 +13,10 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
 export default function Index() {
-  const [content, setContent] = useState(getContent().contact);
+  const [content, setContent] = useState(getContent());
 
   useEffect(() => {
-    const handleUpdate = () => setContent(getContent().contact);
+    const handleUpdate = () => setContent(getContent());
     window.addEventListener('content-updated', handleUpdate);
     return () => window.removeEventListener('content-updated', handleUpdate);
   }, []);
@@ -55,9 +55,9 @@ export default function Index() {
             
             <div className="flex gap-2 items-center flex-shrink-0">
               <Button className="hidden lg:flex" size="sm" variant="ghost" asChild>
-                <a href={`tel:${content.phone.replace(/[^0-9+]/g, '')}`} className="gap-2">
+                <a href={`tel:${content.contact.phone.replace(/[^0-9+]/g, '')}`} className="gap-2">
                   <Icon name="Phone" size={16} />
-                  <span className="font-semibold">{content.phone}</span>
+                  <span className="font-semibold">{content.contact.phone}</span>
                 </a>
               </Button>
               <Button className="hidden md:flex" size="sm" onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}>
@@ -129,10 +129,10 @@ export default function Index() {
                 className="h-14 w-auto mb-4 transition-transform duration-300 hover:scale-105"
               />
               <p className="text-sm text-muted-foreground mb-3">
-                Строим системы и сети
+                {content.company.tagline}
               </p>
               <p className="text-xs text-muted-foreground">
-                На рынке с 2009 года
+                На рынке с {content.company.foundedYear} года
               </p>
             </div>
             <div>
@@ -189,7 +189,7 @@ export default function Index() {
             </div>
           </div>
           <div className="border-t border-border/40 mt-8 pt-8 text-center text-sm text-muted-foreground">
-            <p>© 2024 ООО Компания "Системкрафт". Все права защищены.</p>
+            <p>© 2024 {content.company.legalName}. Все права защищены.</p>
           </div>
         </div>
       </footer>

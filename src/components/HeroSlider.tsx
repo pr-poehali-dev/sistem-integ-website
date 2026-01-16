@@ -1,55 +1,17 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Badge } from '@/components/ui/badge';
-
-interface Slide {
-  id: string;
-  title: string;
-  subtitle: string;
-  description: string;
-  image: string;
-}
-
-const slides: Slide[] = [
-  {
-    id: 'sks',
-    title: 'СКС',
-    subtitle: 'Структурированные кабельные системы',
-    description: 'Современная кабельная инфраструктура с гарантией до 25 лет',
-    image: 'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=1920&h=800&fit=crop&q=80'
-  },
-  {
-    id: 'sot',
-    title: 'Видеонаблюдение',
-    subtitle: 'Система охранного телевидения',
-    description: 'IP-камеры 4K с интеллектуальной аналитикой и облачным хранением',
-    image: 'https://images.unsplash.com/photo-1557597774-9d273605dfa9?w=1920&h=800&fit=crop&q=80'
-  },
-  {
-    id: 'skud',
-    title: 'СКУД',
-    subtitle: 'Контроль и управление доступом',
-    description: 'Биометрия, карты доступа и учет рабочего времени',
-    image: 'https://images.unsplash.com/photo-1633265486064-086b219458ec?w=1920&h=800&fit=crop&q=80'
-  },
-  {
-    id: 'saps',
-    title: 'Пожарная безопасность',
-    subtitle: 'САПС и СОУЭ под ключ',
-    description: 'Автоматическая пожарная сигнализация и система оповещения',
-    image: 'https://images.unsplash.com/photo-1536859975388-c3407e9272b7?w=1920&h=800&fit=crop&q=80'
-  },
-  {
-    id: 'ovik',
-    title: 'ОВИК',
-    subtitle: 'Климатические системы',
-    description: 'Вентиляция, кондиционирование и отопление для комфорта',
-    image: 'https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=1920&h=800&fit=crop&q=80'
-  }
-];
+import { getContent } from '@/lib/content-manager';
 
 export default function HeroSlider() {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [slides, setSlides] = useState(getContent().hero.slides);
+
+  useEffect(() => {
+    const handleUpdate = () => setSlides(getContent().hero.slides);
+    window.addEventListener('content-updated', handleUpdate);
+    return () => window.removeEventListener('content-updated', handleUpdate);
+  }, []);
 
   useEffect(() => {
     const timer = setInterval(() => {

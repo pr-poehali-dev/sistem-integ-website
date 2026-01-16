@@ -1,9 +1,19 @@
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import Icon from '@/components/ui/icon';
+import { getContent } from '@/lib/content-manager';
 
 export default function TelegramButton() {
+  const [telegramUrl, setTelegramUrl] = useState(getContent().contact.telegram);
+
+  useEffect(() => {
+    const handleUpdate = () => setTelegramUrl(getContent().contact.telegram);
+    window.addEventListener('content-updated', handleUpdate);
+    return () => window.removeEventListener('content-updated', handleUpdate);
+  }, []);
+
   const handleTelegramClick = () => {
-    window.open('https://t.me/systemcraft_ekb', '_blank');
+    window.open(telegramUrl, '_blank');
   };
 
   return (
