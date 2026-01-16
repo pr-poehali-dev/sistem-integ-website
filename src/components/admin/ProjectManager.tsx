@@ -20,6 +20,8 @@ export default function ProjectManager() {
   const [showAddProject, setShowAddProject] = useState(false);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filterStatus, setFilterStatus] = useState<string>('all');
   const [newProject, setNewProject] = useState({
     title: '',
     description: '',
@@ -37,6 +39,13 @@ export default function ProjectManager() {
   const loadProjects = () => {
     setProjects(getProjects());
   };
+
+  const filteredProjects = projects.filter((project) => {
+    const matchesSearch = project.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         project.description.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesStatus = filterStatus === 'all' || project.status === filterStatus;
+    return matchesSearch && matchesStatus;
+  });
 
   const handleAddProject = () => {
     if (!newProject.title) {
@@ -150,6 +159,56 @@ export default function ProjectManager() {
           Добавить проект
         </Button>
       </div>
+
+      <Card className="p-4">
+        <div className="grid md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium mb-2">
+              <Icon name="Search" size={14} className="inline mr-1" />
+              Поиск по названию или описанию
+            </label>
+            <Input
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Введите текст для поиска..."
+              className="w-full"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-2">
+              <Icon name="Filter" size={14} className="inline mr-1" />
+              Фильтр по статусу
+            </label>
+            <select
+              value={filterStatus}
+              onChange={(e) => setFilterStatus(e.target.value)}
+              className="w-full px-3 py-2 border border-input rounded-md bg-background"
+            >
+              <option value="all">Все статусы</option>
+              <option value="active">Активен</option>
+              <option value="pending">В ожидании</option>
+              <option value="completed">Завершен</option>
+              <option value="cancelled">Отменен</option>
+            </select>
+          </div>
+        </div>
+        {(searchQuery || filterStatus !== 'all') && (
+          <div className="mt-3 flex items-center justify-between text-sm text-gray-600">
+            <span>Найдено проектов: {filteredProjects.length}</span>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => {
+                setSearchQuery('');
+                setFilterStatus('all');
+              }}
+            >
+              <Icon name="X" size={14} className="mr-1" />
+              Сбросить фильтры
+            </Button>
+          </div>
+        )}
+      </Card>
 
       {showAddProject && (
         <Card className="p-6 space-y-4 border-2 border-primary/20">
@@ -296,13 +355,15 @@ export default function ProjectManager() {
       )}
 
       <div className="grid gap-4">
-        {projects.length === 0 ? (
+        {filteredProjects.length === 0 ? (
           <Card className="p-12 text-center">
             <Icon name="FolderOpen" size={48} className="mx-auto mb-4 opacity-20" />
-            <p className="text-muted-foreground">Нет проектов</p>
+            <p className="text-muted-foreground">
+              {projects.length === 0 ? 'Нет проектов' : 'Проекты не найдены. Попробуйте изменить параметры поиска.'}
+            </p>
           </Card>
         ) : (
-          projects.map((project) => {
+          filteredProjects.map((project) => {
             const entities = getLegalEntitiesByProject(project.id);
             
             return (
