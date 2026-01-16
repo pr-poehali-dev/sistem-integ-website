@@ -29,6 +29,7 @@ export default function EstimateManager() {
   const [searchQuery, setSearchQuery] = useState('');
   const [showAddItem, setShowAddItem] = useState(false);
   const [selectedMaterialId, setSelectedMaterialId] = useState<string>('');
+  const [viewMode, setViewMode] = useState<'table' | 'edit'>('table');
 
   const [newEstimate, setNewEstimate] = useState({
     number: '',
@@ -61,8 +62,10 @@ export default function EstimateManager() {
 
   const filteredEstimates = estimates.filter((estimate) => {
     const searchLower = searchQuery.toLowerCase();
+    const projectName = getProjectName(estimate.projectId).toLowerCase();
     return estimate.number.toLowerCase().includes(searchLower) ||
-           estimate.name.toLowerCase().includes(searchLower);
+           estimate.name.toLowerCase().includes(searchLower) ||
+           projectName.includes(searchLower);
   });
 
   const handleAddEstimate = () => {
@@ -104,6 +107,7 @@ export default function EstimateManager() {
     });
 
     setEditingEstimate(null);
+    setViewMode('table');
     loadData();
     
     toast({
@@ -121,6 +125,12 @@ export default function EstimateManager() {
         description: 'Смета удалена'
       });
     }
+  };
+
+  const handleEditEstimate = (estimate: Estimate) => {
+    setEditingEstimate(estimate);
+    setViewMode('edit');
+    setShowAddItem(false);
   };
 
   const handleAddItemToEstimate = () => {
@@ -200,20 +210,12 @@ export default function EstimateManager() {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold">Сметные расчеты</h2>
+        <h2 className="text-2xl font-bold">Журнал сметных расчетов</h2>
         <Button onClick={() => setShowAddEstimate(!showAddEstimate)}>
           <Icon name="Plus" size={16} className="mr-2" />
           Создать смету
         </Button>
       </div>
-
-      <Card className="p-4">
-        <Input
-          placeholder="Поиск по номеру или названию..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-      </Card>
 
       {showAddEstimate && (
         <Card>
@@ -277,12 +279,12 @@ export default function EstimateManager() {
         </Card>
       )}
 
-      {editingEstimate && (
+      {viewMode === 'edit' && editingEstimate && (
         <Card>
           <CardHeader>
             <div className="flex justify-between items-center">
               <CardTitle>Редактирование сметы: {editingEstimate.number}</CardTitle>
-              <Button variant="ghost" size="sm" onClick={() => setEditingEstimate(null)}>
+              <Button variant="ghost" size="sm" onClick={() => { setEditingEstimate(null); setViewMode('table'); }}>
                 <Icon name="X" size={20} />
               </Button>
             </div>
@@ -503,7 +505,7 @@ export default function EstimateManager() {
                 <Icon name="Check" size={16} className="mr-2" />
                 Сохранить
               </Button>
-              <Button variant="outline" onClick={() => setEditingEstimate(null)}>
+              <Button variant="outline" onClick={() => { setEditingEstimate(null); setViewMode('table'); }}>
                 <Icon name="X" size={16} className="mr-2" />
                 Отмена
               </Button>
@@ -512,47 +514,94 @@ export default function EstimateManager() {
         </Card>
       )}
 
-      <div className="space-y-4">
-        {filteredEstimates.map(estimate => (
-          <Card key={estimate.id}>
-            <CardContent className="p-6">
-              <div className="flex justify-between items-start">
-                <div className="space-y-2">
-                  <div className="flex items-center gap-3">
-                    <h3 className="text-lg font-semibold">Смета № {estimate.number}</h3>
-                    <span className="text-sm text-muted-foreground">
-                      {new Date(estimate.date).toLocaleDateString()}
-                    </span>
-                  </div>
-                  <p className="text-sm">{estimate.name}</p>
-                  <p className="text-xs text-muted-foreground">
-                    Проект: {getProjectName(estimate.projectId)}
-                  </p>
-                  <div className="flex gap-4 text-sm">
-                    <span>Позиций: <strong>{estimate.items.length}</strong></span>
-                    <span>Итого: <strong>{estimate.totalCost.toLocaleString()} ₽</strong></span>
-                  </div>
+      {viewMode === 'table' && (
+        <>
+          <Card className="p-4">
+            <Input
+              placeholder="Поиск по номеру, названию или проекту..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </Card>
+
+          <Card>
+            <CardContent className="p-0">
+              {filteredEstimates.length === 0 ? (
+                <div className="p-8 text-center text-gray-500">
+                  <Icon name="FileText" size={48} className="mx-auto mb-4 opacity-50" />
+                  <p>Нет сметных расчетов</p>
                 </div>
-                <div className="flex gap-2">
-                  <Button variant="outline" size="sm" onClick={() => setEditingEstimate(estimate)}>
-                    <Icon name="Edit" size={14} className="mr-2" />
-                    Редактировать
-                  </Button>
-                  <Button variant="destructive" size="sm" onClick={() => handleDeleteEstimate(estimate.id)}>
-                    <Icon name="Trash2" size={14} />
-                  </Button>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="border-b bg-muted">
+                        <th className="text-left p-4 font-semibold">Номер</th>
+                        <th className="text-left p-4 font-semibold">Дата</th>
+                        <th className="text-left p-4 font-semibold">Название</th>
+                        <th className="text-left p-4 font-semibold">Проект</th>
+                        <th className="text-center p-4 font-semibold">Позиций</th>
+                        <th className="text-right p-4 font-semibold">Сумма, ₽</th>
+                        <th className="text-center p-4 font-semibold">Действия</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredEstimates.map((estimate) => (
+                        <tr key={estimate.id} className="border-b hover:bg-muted/50 transition-colors">
+                          <td className="p-4 font-mono font-semibold">{estimate.number}</td>
+                          <td className="p-4 text-sm text-muted-foreground">
+                            {new Date(estimate.date).toLocaleDateString('ru-RU')}
+                          </td>
+                          <td className="p-4">{estimate.name}</td>
+                          <td className="p-4 text-sm">{getProjectName(estimate.projectId)}</td>
+                          <td className="p-4 text-center">
+                            <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-semibold">
+                              {estimate.items.length}
+                            </span>
+                          </td>
+                          <td className="p-4 text-right font-semibold">
+                            {estimate.totalCost.toLocaleString()}
+                          </td>
+                          <td className="p-4">
+                            <div className="flex justify-center gap-2">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleEditEstimate(estimate)}
+                              >
+                                <Icon name="Edit" size={14} className="mr-1" />
+                                Редактировать
+                              </Button>
+                              <Button
+                                variant="destructive"
+                                size="sm"
+                                onClick={() => handleDeleteEstimate(estimate.id)}
+                              >
+                                <Icon name="Trash2" size={14} />
+                              </Button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                    <tfoot>
+                      <tr className="bg-muted font-semibold">
+                        <td colSpan={4} className="p-4 text-right">Всего смет: {filteredEstimates.length}</td>
+                        <td className="p-4 text-center">
+                          {filteredEstimates.reduce((sum, est) => sum + est.items.length, 0)}
+                        </td>
+                        <td className="p-4 text-right">
+                          {filteredEstimates.reduce((sum, est) => sum + est.totalCost, 0).toLocaleString()}
+                        </td>
+                        <td></td>
+                      </tr>
+                    </tfoot>
+                  </table>
                 </div>
-              </div>
+              )}
             </CardContent>
           </Card>
-        ))}
-      </div>
-
-      {filteredEstimates.length === 0 && (
-        <Card className="p-8 text-center text-gray-500">
-          <Icon name="FileText" size={48} className="mx-auto mb-4 opacity-50" />
-          <p>Нет сметных расчетов</p>
-        </Card>
+        </>
       )}
     </div>
   );
