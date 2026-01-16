@@ -34,9 +34,12 @@ export default function HeroSlider() {
           transition={{ duration: 0.7 }}
           className="absolute inset-0"
         >
-          <div 
-            className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: `url(${currentSlide.image})` }}
+          <img 
+            src={currentSlide.image}
+            alt={currentSlide.title}
+            loading="eager"
+            decoding="async"
+            className="absolute inset-0 w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-transparent" />
           

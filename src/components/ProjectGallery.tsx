@@ -6,62 +6,62 @@ import Icon from '@/components/ui/icon';
 
 const projectPhotos = [
   {
-    url: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1200&h=800&fit=crop',
+    url: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&h=600&fit=crop&q=80',
     description: 'Монтаж кабельных трасс',
     systems: ['СКС']
   },
   {
-    url: 'https://images.unsplash.com/photo-1565008576549-57569a49371d?w=1200&h=800&fit=crop',
+    url: 'https://images.unsplash.com/photo-1565008576549-57569a49371d?w=800&h=600&fit=crop&q=80',
     description: 'Установка пожарных извещателей',
     systems: ['САПС', 'СОУЭ']
   },
   {
-    url: 'https://images.unsplash.com/photo-1553413077-190dd305871c?w=1200&h=800&fit=crop',
+    url: 'https://images.unsplash.com/photo-1553413077-190dd305871c?w=800&h=600&fit=crop&q=80',
     description: 'IP-камеры видеонаблюдения',
     systems: ['СОТ']
   },
   {
-    url: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200&h=800&fit=crop',
+    url: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&h=600&fit=crop&q=80',
     description: 'Турникеты и считыватели карт',
     systems: ['СКУД']
   },
   {
-    url: 'https://images.unsplash.com/photo-1581092918484-8313e1f7e8c6?w=1200&h=800&fit=crop',
+    url: 'https://images.unsplash.com/photo-1581092918484-8313e1f7e8c6?w=800&h=600&fit=crop&q=80',
     description: 'Датчики охранной сигнализации',
     systems: ['СОТС']
   },
   {
-    url: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=1200&h=800&fit=crop',
+    url: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=800&h=600&fit=crop&q=80',
     description: 'Установка интеллектуальных счетчиков',
     systems: ['АСКУЭ']
   },
   {
-    url: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=1200&h=800&fit=crop',
+    url: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=800&h=600&fit=crop&q=80',
     description: 'Монтаж распределительных щитов',
     systems: ['ЭОМ']
   },
   {
-    url: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1200&h=800&fit=crop',
+    url: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800&h=600&fit=crop&q=80',
     description: 'Приточно-вытяжные установки',
     systems: ['ОВИК']
   },
   {
-    url: 'https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=1200&h=800&fit=crop',
+    url: 'https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=800&h=600&fit=crop&q=80',
     description: 'Серверная комната',
     systems: ['СКС', 'СКУД']
   },
   {
-    url: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=1200&h=800&fit=crop',
+    url: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=800&h=600&fit=crop&q=80',
     description: 'Диспетчерская панель управления',
     systems: ['САПС', 'СОУЭ', 'СОТ']
   },
   {
-    url: 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=1200&h=800&fit=crop',
+    url: 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=800&h=600&fit=crop&q=80',
     description: 'Офисное освещение',
     systems: ['ЭОМ']
   },
   {
-    url: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&h=800&fit=crop',
+    url: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop&q=80',
     description: 'Климатическое оборудование',
     systems: ['ОВИК']
   }
@@ -124,7 +124,9 @@ export default function ProjectGallery() {
                 <div className="aspect-[4/3] overflow-hidden bg-muted">
                   <img
                     src={photo.url}
-                    alt={photo.title}
+                    alt={photo.description}
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                   />
                 </div>
