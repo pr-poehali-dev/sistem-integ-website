@@ -424,9 +424,10 @@ export default function Index() {
                   <Icon name="Phone" className="text-primary group-hover:text-white transition-colors duration-500" size={24} />
                 </div>
                 <p className="font-medium mb-1">Телефон</p>
-                <a href="tel:+74951234567" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  +7 (495) 123-45-67
+                <a href="tel:+73433799888" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                  +7 (343) 379-98-88
                 </a>
+                <p className="text-xs text-muted-foreground/70 mt-1">Многоканальный</p>
               </CardContent>
             </Card>
             <Card className="group text-center hover:shadow-2xl hover:shadow-primary/20 transition-all duration-500 hover:scale-105 hover:-translate-y-2 cursor-pointer">
@@ -447,7 +448,7 @@ export default function Index() {
                 </div>
                 <p className="font-medium mb-1">Офис</p>
                 <p className="text-sm text-muted-foreground">
-                  г. Екатеринбург, ул. Шейнкмана, 111, офис 208
+                  г. Екатеринбург, ул. Крестинского, 46А, офис 702
                 </p>
               </CardContent>
             </Card>
