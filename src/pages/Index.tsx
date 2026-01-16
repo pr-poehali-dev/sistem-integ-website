@@ -93,31 +93,57 @@ const solutions = [
 const portfolio = [
   {
     title: 'Бизнес-центр "Технопарк"',
-    systems: ['СКС', 'СКУД', 'СОТС', 'ОВИК'],
-    area: '15 000 м²',
+    systems: ['СКС', 'СКУД', 'СОТ', 'ОВИК'],
+    area: 15000,
+    systemsCount: 4,
+    duration: '6 месяцев',
     year: '2024',
-    image: '🏢'
+    quarter: 'Q2'
   },
   {
-    title: 'Производственный комплекс',
-    systems: ['САПС', 'СОУЭ', 'СОТ', 'АСКУЭ'],
-    area: '8 500 м²',
+    title: 'Производственный комплекс "Металлург"',
+    systems: ['САПС', 'СОУЭ', 'СОТС', 'АСКУЭ'],
+    area: 8500,
+    systemsCount: 4,
+    duration: '4 месяца',
+    year: '2024',
+    quarter: 'Q1'
+  },
+  {
+    title: 'Логистический центр "Урал-Транзит"',
+    systems: ['СКС', 'СОТ', 'СКУД', 'ЭОМ'],
+    area: 22000,
+    systemsCount: 4,
+    duration: '8 месяцев',
     year: '2023',
-    image: '🏭'
+    quarter: 'Q4'
   },
   {
-    title: 'Логистический центр',
-    systems: ['СКС', 'СОТС', 'СКУД', 'ЭОМ'],
-    area: '22 000 м²',
-    year: '2024',
-    image: '📦'
-  },
-  {
-    title: 'Административное здание',
+    title: 'Административное здание "Северный"',
     systems: ['СКС', 'СКУД', 'СОУЭ', 'ОВИК'],
-    area: '6 200 м²',
+    area: 6200,
+    systemsCount: 4,
+    duration: '3 месяца',
     year: '2023',
-    image: '🏛️'
+    quarter: 'Q3'
+  },
+  {
+    title: 'ТРЦ "Гринвич"',
+    systems: ['САПС', 'СОУЭ', 'СОТ', 'ЭОМ', 'ОВИК'],
+    area: 35000,
+    systemsCount: 5,
+    duration: '12 месяцев',
+    year: '2023',
+    quarter: 'Q2'
+  },
+  {
+    title: 'Медицинский центр "ЕвроМед"',
+    systems: ['СКС', 'САПС', 'СОУЭ', 'СКУД', 'ОВИК'],
+    area: 4500,
+    systemsCount: 5,
+    duration: '5 месяцев',
+    year: '2023',
+    quarter: 'Q1'
   }
 ];
 
@@ -321,40 +347,56 @@ export default function Index() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8">
-            {portfolio.map((project, index) => (
-              <Card key={index} className="overflow-hidden group hover:shadow-2xl hover:shadow-primary/20 transition-all duration-500 cursor-pointer hover:-translate-y-2 animate-slide-up" style={{ animationDelay: `${index * 0.15}s` }}>
-                <div className="aspect-video bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center text-8xl group-hover:scale-125 group-hover:rotate-3 transition-all duration-700">
-                  {project.image}
-                </div>
-                <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <CardTitle className="text-xl font-heading mb-2">{project.title}</CardTitle>
-                      <div className="flex gap-4 text-sm text-muted-foreground">
-                        <span className="flex items-center gap-1">
-                          <Icon name="Maximize" size={14} />
-                          {project.area}
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <Icon name="Calendar" size={14} />
-                          {project.year}
-                        </span>
+          <div className="relative">
+            {/* Timeline line */}
+            <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-primary via-primary/50 to-transparent hidden md:block"></div>
+            
+            <div className="space-y-8">
+              {portfolio.map((project, index) => (
+                <div key={index} className="relative animate-slide-up" style={{ animationDelay: `${index * 0.1}s` }}>
+                  {/* Timeline dot */}
+                  <div className="absolute left-8 top-8 w-4 h-4 rounded-full bg-primary border-4 border-background shadow-lg hidden md:block transform -translate-x-1/2"></div>
+                  
+                  <Card className="md:ml-20 group hover:shadow-2xl hover:shadow-primary/20 transition-all duration-500 hover:-translate-y-1">
+                    <CardHeader>
+                      <div className="flex items-start justify-between mb-4">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-3 mb-2">
+                            <CardTitle className="text-xl font-heading">{project.title}</CardTitle>
+                            <Badge variant="secondary" className="text-xs">{project.year} {project.quarter}</Badge>
+                          </div>
+                          
+                          {/* Metrics Grid */}
+                          <div className="grid grid-cols-3 gap-4 mt-4">
+                            <div className="text-center p-3 rounded-lg bg-primary/5 group-hover:bg-primary/10 transition-colors">
+                              <div className="text-2xl font-bold text-primary">{project.area.toLocaleString()}</div>
+                              <div className="text-xs text-muted-foreground mt-1">м² площадь</div>
+                            </div>
+                            <div className="text-center p-3 rounded-lg bg-primary/5 group-hover:bg-primary/10 transition-colors">
+                              <div className="text-2xl font-bold text-primary">{project.systemsCount}</div>
+                              <div className="text-xs text-muted-foreground mt-1">системы</div>
+                            </div>
+                            <div className="text-center p-3 rounded-lg bg-primary/5 group-hover:bg-primary/10 transition-colors">
+                              <div className="text-2xl font-bold text-primary">{project.duration.split(' ')[0]}</div>
+                              <div className="text-xs text-muted-foreground mt-1">{project.duration.split(' ')[1]}</div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex flex-wrap gap-2">
-                    {project.systems.map((system, idx) => (
-                      <Badge key={idx} variant="outline" className="font-medium">
-                        {system}
-                      </Badge>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                    </CardHeader>
+                    <CardContent>
+                      <div className="flex flex-wrap gap-2">
+                        {project.systems.map((system, idx) => (
+                          <Badge key={idx} variant="outline" className="font-medium hover:bg-primary hover:text-primary-foreground transition-colors cursor-default">
+                            {system}
+                          </Badge>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
