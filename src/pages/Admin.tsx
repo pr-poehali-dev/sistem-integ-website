@@ -10,6 +10,9 @@ import ImageManager from '@/components/admin/ImageManager';
 import UserManager from '@/components/admin/UserManager';
 import ProjectManager from '@/components/admin/ProjectManager';
 import LegalEntityManager from '@/components/admin/LegalEntityManager';
+import PersonManager from '@/components/admin/PersonManager';
+import UnitManager from '@/components/admin/UnitManager';
+import BankManager from '@/components/admin/BankManager';
 import PasswordChangeModal from '@/components/admin/PasswordChangeModal';
 
 export default function Admin() {
@@ -17,7 +20,7 @@ export default function Admin() {
   const [authenticated, setAuthenticated] = useState(false);
   const [currentUser, setCurrentUser] = useState<{id: string; name: string; role: string} | null>(null);
   const [content, setContent] = useState<SiteContent | null>(null);
-  const [activeTab, setActiveTab] = useState<'hero' | 'solutions' | 'advantages' | 'portfolio' | 'certificates' | 'contact' | 'images' | 'users' | 'projects' | 'legal-entities'>('images');
+  const [activeTab, setActiveTab] = useState<'hero' | 'solutions' | 'advantages' | 'portfolio' | 'certificates' | 'contact' | 'images' | 'users' | 'projects' | 'legal-entities' | 'persons' | 'units' | 'banks'>('images');
   const [showPasswordChange, setShowPasswordChange] = useState(false);
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -126,6 +129,24 @@ export default function Admin() {
             ) : activeTab === 'legal-entities' ? (
               <div className="text-center py-12 text-muted-foreground">
                 Доступ запрещен. Только администраторы могут управлять юрлицами.
+              </div>
+            ) : activeTab === 'persons' && currentUser?.role === 'admin' ? (
+              <PersonManager />
+            ) : activeTab === 'persons' ? (
+              <div className="text-center py-12 text-muted-foreground">
+                Доступ запрещен. Только администраторы могут управлять физлицами.
+              </div>
+            ) : activeTab === 'units' && currentUser?.role === 'admin' ? (
+              <UnitManager />
+            ) : activeTab === 'units' ? (
+              <div className="text-center py-12 text-muted-foreground">
+                Доступ запрещен. Только администраторы могут управлять единицами измерения.
+              </div>
+            ) : activeTab === 'banks' && currentUser?.role === 'admin' ? (
+              <BankManager />
+            ) : activeTab === 'banks' ? (
+              <div className="text-center py-12 text-muted-foreground">
+                Доступ запрещен. Только администраторы могут управлять банками.
               </div>
             ) : (
               <AdminContentEditor
