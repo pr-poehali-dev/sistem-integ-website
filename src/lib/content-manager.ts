@@ -187,7 +187,7 @@ const DEFAULT_CONTENT: SiteContent = {
     ],
   },
   certificates: {
-    title: "Наши сертификаты",
+    title: "Сертификаты и лицензии",
     items: [
       {
         id: "1",

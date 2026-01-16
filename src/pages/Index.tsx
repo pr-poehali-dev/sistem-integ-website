@@ -33,7 +33,7 @@ export default function Index() {
             <nav className="hidden md:flex gap-6 items-center">
               <a href="#solutions" className="text-sm font-medium hover:text-primary transition-colors">Решения</a>
               <a href="#portfolio" className="text-sm font-medium hover:text-primary transition-colors">Портфолио</a>
-              <a href="#certificates" className="text-sm font-medium hover:text-primary transition-colors">Сертификаты</a>
+              <a href="#certificates" className="text-sm font-medium hover:text-primary transition-colors">Сертификаты и лицензии</a>
             </nav>
             <div className="flex gap-2">
               <Button className="hidden md:flex" variant="outline" asChild>
@@ -93,7 +93,7 @@ export default function Index() {
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li><a href="#" className="hover:text-primary transition-colors">О нас</a></li>
                 <li><a href="#portfolio" className="hover:text-primary transition-colors">Портфолио</a></li>
-                <li><a href="#certificates" className="hover:text-primary transition-colors">Сертификаты</a></li>
+                <li><a href="#certificates" className="hover:text-primary transition-colors">Сертификаты и лицензии</a></li>
                 <li><a href="#contact" className="hover:text-primary transition-colors">Контакты</a></li>
                 <li><a href="/privacy-policy" className="hover:text-primary transition-colors">Политика конфиденциальности</a></li>
               </ul>
