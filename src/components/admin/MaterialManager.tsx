@@ -16,6 +16,7 @@ import {
 import { getUnits, type Unit } from '@/lib/unit-manager';
 import MaterialForm from './materials/MaterialForm';
 import MaterialCard from './materials/MaterialCard';
+import ExcelImport from './ExcelImport';
 
 export default function MaterialManager() {
   const { toast } = useToast();
@@ -252,6 +253,8 @@ export default function MaterialManager() {
           Добавить элемент
         </Button>
       </div>
+
+      <ExcelImport />
 
       <Card className="p-4">
         <div className="grid md:grid-cols-2 gap-4">
