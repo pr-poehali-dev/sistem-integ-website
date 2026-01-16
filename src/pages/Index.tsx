@@ -160,13 +160,11 @@ export default function Index() {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-lg flex items-center justify-center">
-                <Icon name="Cpu" className="text-white" size={24} />
-              </div>
-              <div>
-                <h1 className="text-xl font-heading font-bold text-foreground">TechIntegrator</h1>
-                <p className="text-xs text-muted-foreground">Системная интеграция</p>
-              </div>
+              <img 
+                src="https://cdn.poehali.dev/files/LOGO TEXT SYSTEMCRAFT.png" 
+                alt="СистемКрафт" 
+                className="h-12 w-auto"
+              />
             </div>
             <nav className="hidden md:flex gap-6">
               <a href="#solutions" className="text-sm font-medium hover:text-primary transition-colors">Решения</a>
@@ -192,7 +190,7 @@ export default function Index() {
             </Badge>
             <h2 className="text-4xl md:text-6xl font-heading font-extrabold leading-tight">
               Комплексная интеграция
-              <span className="block mt-2 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+              <span className="block mt-2 text-primary">
                 инженерных систем
               </span>
             </h2>
@@ -411,8 +409,8 @@ export default function Index() {
                   <Icon name="Mail" className="text-primary" size={24} />
                 </div>
                 <p className="font-medium mb-1">Email</p>
-                <a href="mailto:info@techintegrator.ru" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  info@techintegrator.ru
+                <a href="mailto:info@systemcraft.ru" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                  info@systemcraft.ru
                 </a>
               </CardContent>
             </Card>
@@ -435,14 +433,13 @@ export default function Index() {
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-4 gap-8">
             <div>
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-8 h-8 bg-gradient-to-br from-primary to-secondary rounded-lg flex items-center justify-center">
-                  <Icon name="Cpu" className="text-white" size={18} />
-                </div>
-                <span className="font-heading font-bold">TechIntegrator</span>
-              </div>
+              <img 
+                src="https://cdn.poehali.dev/files/LOGO TEXT SYSTEMCRAFT.png" 
+                alt="СистемКрафт" 
+                className="h-10 w-auto mb-4"
+              />
               <p className="text-sm text-muted-foreground">
-                Системная интеграция инженерных решений
+                Строим системы и сети
               </p>
             </div>
             <div>
@@ -472,7 +469,7 @@ export default function Index() {
                 </li>
                 <li className="flex items-center gap-2">
                   <Icon name="Mail" size={14} />
-                  info@techintegrator.ru
+                  info@systemcraft.ru
                 </li>
                 <li className="flex items-center gap-2">
                   <Icon name="MapPin" size={14} />
@@ -482,7 +479,7 @@ export default function Index() {
             </div>
           </div>
           <div className="border-t border-border/40 mt-8 pt-8 text-center text-sm text-muted-foreground">
-            <p>© 2024 TechIntegrator. Все права защищены.</p>
+            <p>© 2024 СистемКрафт. Все права защищены.</p>
           </div>
         </div>
       </footer>
