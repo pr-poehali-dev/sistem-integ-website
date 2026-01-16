@@ -34,9 +34,21 @@ export interface ProjectAccess {
   grantedBy: string;
 }
 
+export interface System {
+  id: string;
+  projectId: string;
+  name: string;
+  description: string;
+  type: string;
+  status: 'active' | 'inactive' | 'development' | 'maintenance';
+  clientCuratorId: string | null;
+  createdAt: number;
+}
+
 const PROJECTS_KEY = 'projects';
 const LEGAL_ENTITIES_KEY = 'legal_entities';
 const PROJECT_ACCESS_KEY = 'project_access';
+const SYSTEMS_KEY = 'systems';
 
 export function getProjects(): Project[] {
   const stored = localStorage.getItem(PROJECTS_KEY);
@@ -99,6 +111,9 @@ export function deleteProject(projectId: string): boolean {
   
   const access = getProjectAccess().filter(a => a.projectId !== projectId);
   saveProjectAccess(access);
+  
+  const systems = getSystems().filter(s => s.projectId !== projectId);
+  saveSystems(systems);
   
   saveProjects(filtered);
   return true;
@@ -191,4 +206,50 @@ export function hasProjectAccess(userId: string, projectId: string, minLevel: 'r
   
   const levels = { read: 1, write: 2, admin: 3 };
   return levels[access.accessLevel] >= levels[minLevel];
+}
+
+export function getSystems(): System[] {
+  const stored = localStorage.getItem(SYSTEMS_KEY);
+  return stored ? JSON.parse(stored) : [];
+}
+
+function saveSystems(systems: System[]) {
+  localStorage.setItem(SYSTEMS_KEY, JSON.stringify(systems));
+}
+
+export function getSystemsByProject(projectId: string): System[] {
+  return getSystems().filter(s => s.projectId === projectId);
+}
+
+export function createSystem(data: Omit<System, 'id' | 'createdAt'>): System {
+  const systems = getSystems();
+  const newSystem: System = {
+    ...data,
+    id: 'system_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+    createdAt: Date.now()
+  };
+  systems.push(newSystem);
+  saveSystems(systems);
+  return newSystem;
+}
+
+export function updateSystem(systemId: string, updates: Partial<Omit<System, 'id' | 'createdAt' | 'projectId'>>): boolean {
+  const systems = getSystems();
+  const index = systems.findIndex(s => s.id === systemId);
+  
+  if (index === -1) return false;
+  
+  systems[index] = { ...systems[index], ...updates };
+  saveSystems(systems);
+  return true;
+}
+
+export function deleteSystem(systemId: string): boolean {
+  const systems = getSystems();
+  const filtered = systems.filter(s => s.id !== systemId);
+  
+  if (filtered.length === systems.length) return false;
+  
+  saveSystems(filtered);
+  return true;
 }

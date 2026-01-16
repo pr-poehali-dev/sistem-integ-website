@@ -13,6 +13,7 @@ import {
   type Project
 } from '@/lib/project-manager';
 import ProjectAccessManager from './ProjectAccessManager';
+import SystemManager from './SystemManager';
 
 export default function ProjectManager() {
   const { toast } = useToast();
@@ -20,6 +21,7 @@ export default function ProjectManager() {
   const [showAddProject, setShowAddProject] = useState(false);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [projectTab, setProjectTab] = useState<'info' | 'access' | 'systems'>('info');
   const [searchQuery, setSearchQuery] = useState('');
   const [filterStatus, setFilterStatus] = useState<string>('all');
   const [newProject, setNewProject] = useState({
@@ -141,11 +143,117 @@ export default function ProjectManager() {
   if (selectedProject) {
     return (
       <div className="space-y-6">
-        <Button variant="outline" onClick={() => setSelectedProject(null)}>
+        <Button variant="outline" onClick={() => {
+          setSelectedProject(null);
+          setProjectTab('info');
+        }}>
           <Icon name="ArrowLeft" size={16} className="mr-2" />
           Назад к проектам
         </Button>
-        <ProjectAccessManager project={selectedProject} />
+
+        <Card className="p-6 bg-gradient-to-br from-orange-50 to-white border-2 border-orange-200">
+          <div className="flex items-start gap-4">
+            <div className="p-3 bg-orange-100 rounded-lg">
+              <Icon name="FolderOpen" size={24} className="text-orange-600" />
+            </div>
+            <div className="flex-1">
+              <h3 className="text-xl font-bold mb-1">{selectedProject.title}</h3>
+              {selectedProject.description && (
+                <p className="text-sm text-gray-600">{selectedProject.description}</p>
+              )}
+            </div>
+          </div>
+        </Card>
+
+        <div className="flex gap-2 border-b">
+          <button
+            onClick={() => setProjectTab('info')}
+            className={`px-4 py-2 font-medium transition-colors ${
+              projectTab === 'info'
+                ? 'text-orange-600 border-b-2 border-orange-600'
+                : 'text-gray-600 hover:text-gray-900'
+            }`}
+          >
+            <Icon name="Info" size={16} className="inline mr-2" />
+            Информация
+          </button>
+          <button
+            onClick={() => setProjectTab('systems')}
+            className={`px-4 py-2 font-medium transition-colors ${
+              projectTab === 'systems'
+                ? 'text-orange-600 border-b-2 border-orange-600'
+                : 'text-gray-600 hover:text-gray-900'
+            }`}
+          >
+            <Icon name="Server" size={16} className="inline mr-2" />
+            Системы
+          </button>
+          <button
+            onClick={() => setProjectTab('access')}
+            className={`px-4 py-2 font-medium transition-colors ${
+              projectTab === 'access'
+                ? 'text-orange-600 border-b-2 border-orange-600'
+                : 'text-gray-600 hover:text-gray-900'
+            }`}
+          >
+            <Icon name="Users" size={16} className="inline mr-2" />
+            Доступы
+          </button>
+        </div>
+
+        {projectTab === 'info' && (
+          <Card className="p-6">
+            <div className="space-y-4">
+              <div>
+                <span className="text-sm font-medium text-gray-500">Статус:</span>
+                <span className={`ml-2 px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(selectedProject.status)}`}>
+                  {getStatusLabel(selectedProject.status)}
+                </span>
+              </div>
+              {selectedProject.startDate && (
+                <div>
+                  <span className="text-sm font-medium text-gray-500">Дата начала:</span>
+                  <span className="ml-2">{new Date(selectedProject.startDate).toLocaleDateString()}</span>
+                </div>
+              )}
+              {selectedProject.endDate && (
+                <div>
+                  <span className="text-sm font-medium text-gray-500">Дата окончания:</span>
+                  <span className="ml-2">{new Date(selectedProject.endDate).toLocaleDateString()}</span>
+                </div>
+              )}
+              {selectedProject.budget && (
+                <div>
+                  <span className="text-sm font-medium text-gray-500">Бюджет:</span>
+                  <span className="ml-2">{selectedProject.budget.toLocaleString()} ₽</span>
+                </div>
+              )}
+              {(() => {
+                const entities = getLegalEntitiesByProject(selectedProject.id);
+                return entities.length > 0 && (
+                  <div>
+                    <div className="text-sm font-medium text-gray-500 mb-2">Юридические лица:</div>
+                    <div className="space-y-1 pl-4">
+                      {entities.map((entity) => (
+                        <div key={entity.id} className="text-sm">
+                          • {entity.name} <span className="text-gray-400">(ИНН: {entity.inn})</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })()}
+            </div>
+          </Card>
+        )}
+
+        {projectTab === 'systems' && (
+          <SystemManager project={selectedProject} />
+        )}
+
+        {projectTab === 'access' && (
+          <ProjectAccessManager project={selectedProject} />
+        )}
       </div>
     );
   }
@@ -420,12 +528,13 @@ export default function ProjectManager() {
                   
                   <div className="flex gap-2">
                     <Button 
-                      variant="outline" 
+                      variant="default" 
                       size="sm"
                       onClick={() => setSelectedProject(project)}
-                      title="Управление доступами"
+                      title="Открыть проект"
                     >
-                      <Icon name="Users" size={16} />
+                      <Icon name="FolderOpen" size={16} className="mr-1" />
+                      Открыть
                     </Button>
                     <Button 
                       variant="outline" 
