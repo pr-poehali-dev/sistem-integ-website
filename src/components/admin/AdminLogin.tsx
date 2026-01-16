@@ -75,17 +75,66 @@ export default function AdminLogin({ onLoginSuccess }: AdminLoginProps) {
     if (token) {
       const resetLink = `${window.location.origin}/reset-password?token=${token}`;
       
-      toast({
-        title: 'Ссылка для сброса пароля',
-        description: `Скопируйте ссылку: ${resetLink}`,
-        duration: 10000
-      });
+      try {
+        const response = await fetch('https://functions.poehali.dev/c59964d9-2255-42f3-93ce-55264ab2dfdb', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            to: email,
+            subject: 'Восстановление пароля - СистемКрафт',
+            html: `
+              <html>
+              <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+                <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+                  <h2 style="color: #ff6b35;">Восстановление пароля</h2>
+                  <p>Вы запросили сброс пароля для доступа к админ-панели сайта СистемКрафт.</p>
+                  <p>Нажмите на кнопку ниже, чтобы создать новый пароль:</p>
+                  <div style="text-align: center; margin: 30px 0;">
+                    <a href="${resetLink}" style="background-color: #ff6b35; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; display: inline-block;">
+                      Сбросить пароль
+                    </a>
+                  </div>
+                  <p style="color: #666; font-size: 14px;">Или скопируйте ссылку в браузер:</p>
+                  <p style="background: #f5f5f5; padding: 10px; border-radius: 5px; word-break: break-all; font-size: 12px;">
+                    ${resetLink}
+                  </p>
+                  <p style="color: #999; font-size: 12px; margin-top: 30px;">
+                    Ссылка действительна в течение 1 часа.<br>
+                    Если вы не запрашивали сброс пароля, просто проигнорируйте это письмо.
+                  </p>
+                </div>
+              </body>
+              </html>
+            `,
+            text: `Восстановление пароля\n\nВы запросили сброс пароля для админ-панели СистемКрафт.\n\nПерейдите по ссылке для создания нового пароля:\n${resetLink}\n\nСсылка действительна в течение 1 часа.\nЕсли вы не запрашивали сброс пароля, просто проигнорируйте это письмо.`
+          })
+        });
 
-      navigator.clipboard.writeText(resetLink);
-      
-      alert(`Ссылка для сброса пароля скопирована в буфер обмена:\n\n${resetLink}\n\nОтправьте её на email: ${email}`);
-      
-      setMode('login');
+        const result = await response.json();
+
+        if (result.success) {
+          toast({
+            title: 'Письмо отправлено!',
+            description: `Ссылка для сброса пароля отправлена на ${email}`
+          });
+          setMode('login');
+        } else {
+          throw new Error(result.error || 'Ошибка отправки email');
+        }
+      } catch (err) {
+        const resetLinkFallback = `${window.location.origin}/reset-password?token=${token}`;
+        navigator.clipboard.writeText(resetLinkFallback);
+        
+        toast({
+          title: 'Не удалось отправить email',
+          description: 'Ссылка скопирована в буфер обмена. Отправьте её вручную.',
+          duration: 10000
+        });
+        
+        alert(`Не удалось отправить email автоматически.\n\nСсылка скопирована в буфер обмена:\n\n${resetLinkFallback}\n\nОтправьте её на email: ${email}\n\nПроверьте настройки SMTP (SMTP_USER и SMTP_PASSWORD) в секретах проекта.`);
+      }
     } else {
       setError('Пользователь с таким email не найден');
     }
