@@ -23,31 +23,46 @@ export default function Index() {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="border-b border-border/40 backdrop-blur-sm sticky top-0 z-50 bg-background/80 transition-all duration-300">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
+      <header className="border-b border-border/40 backdrop-blur-sm sticky top-0 z-50 bg-background/95 transition-all duration-300 shadow-sm">
+        <div className="container mx-auto px-4 py-3">
+          <div className="flex items-center justify-between gap-8">
+            <a href="#" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="flex items-center gap-3 flex-shrink-0">
               <img 
                 src="https://cdn.poehali.dev/files/LOGO TEXT SYSTEMCRAFT.png" 
                 alt="СистемКрафт" 
-                className="h-16 w-auto transition-transform duration-300 hover:scale-105 cursor-pointer"
+                className="h-14 w-auto transition-transform duration-300 hover:scale-105 cursor-pointer"
               />
-            </div>
-            <nav className="hidden md:flex gap-6 items-center">
-              <a href="#solutions" className="text-sm font-medium hover:text-primary transition-colors">Системы и сети</a>
-              <a href="#portfolio" className="text-sm font-medium hover:text-primary transition-colors">Портфолио</a>
-              <a href="#certificates" className="text-sm font-medium hover:text-primary transition-colors">Сертификаты и лицензии</a>
+            </a>
+            
+            <nav className="hidden lg:flex gap-1 items-center flex-1 justify-center">
+              <a href="#solutions" className="px-4 py-2 text-sm font-medium rounded-lg hover:bg-primary/10 hover:text-primary transition-all relative group">
+                <span>Системы и сети</span>
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full"></span>
+              </a>
+              <a href="#portfolio" className="px-4 py-2 text-sm font-medium rounded-lg hover:bg-primary/10 hover:text-primary transition-all relative group">
+                <span>Портфолио</span>
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full"></span>
+              </a>
+              <a href="#certificates" className="px-4 py-2 text-sm font-medium rounded-lg hover:bg-primary/10 hover:text-primary transition-all relative group">
+                <span>Сертификаты</span>
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full"></span>
+              </a>
+              <a href="#contact" className="px-4 py-2 text-sm font-medium rounded-lg hover:bg-primary/10 hover:text-primary transition-all relative group">
+                <span>Контакты</span>
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full"></span>
+              </a>
             </nav>
-            <div className="flex gap-2">
-              <Button className="hidden md:flex" variant="outline" asChild>
-                <a href={`tel:${content.phone.replace(/[^0-9+]/g, '')}`}>
-                  <Icon name="Phone" size={16} className="mr-2" />
-                  {content.phone}
+            
+            <div className="flex gap-2 items-center flex-shrink-0">
+              <Button className="hidden lg:flex" size="sm" variant="ghost" asChild>
+                <a href={`tel:${content.phone.replace(/[^0-9+]/g, '')}`} className="gap-2">
+                  <Icon name="Phone" size={16} />
+                  <span className="font-semibold">{content.phone}</span>
                 </a>
               </Button>
-              <Button className="hidden md:flex" onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}>
-                <Icon name="Mail" size={16} className="mr-2" />
-                Заявка
+              <Button className="hidden md:flex" size="sm" onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}>
+                <Icon name="Send" size={16} className="mr-2" />
+                Оставить заявку
               </Button>
             </div>
           </div>
