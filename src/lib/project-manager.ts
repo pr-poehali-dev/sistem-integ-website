@@ -21,7 +21,6 @@ export interface LegalEntity {
   directorName: string;
   phone: string;
   email: string;
-  projectId: string;
   createdAt: number;
 }
 
@@ -106,9 +105,6 @@ export function deleteProject(projectId: string): boolean {
   
   if (filtered.length === projects.length) return false;
   
-  const entities = getLegalEntities().filter(e => e.projectId !== projectId);
-  saveLegalEntities(entities);
-  
   const access = getProjectAccess().filter(a => a.projectId !== projectId);
   saveProjectAccess(access);
   
@@ -117,10 +113,6 @@ export function deleteProject(projectId: string): boolean {
   
   saveProjects(filtered);
   return true;
-}
-
-export function getLegalEntitiesByProject(projectId: string): LegalEntity[] {
-  return getLegalEntities().filter(e => e.projectId === projectId);
 }
 
 export function createLegalEntity(data: Omit<LegalEntity, 'id' | 'createdAt'>): LegalEntity {
@@ -152,8 +144,25 @@ export function deleteLegalEntity(entityId: string): boolean {
   
   if (filtered.length === entities.length) return false;
   
+  const projects = getProjects();
+  projects.forEach(project => {
+    if (project.legalEntityId === entityId) {
+      project.legalEntityId = null;
+    }
+  });
+  saveProjects(projects);
+  
   saveLegalEntities(filtered);
   return true;
+}
+
+export function getLegalEntityById(entityId: string | null): LegalEntity | null {
+  if (!entityId) return null;
+  return getLegalEntities().find(e => e.id === entityId) || null;
+}
+
+export function getProjectsByLegalEntity(entityId: string): Project[] {
+  return getProjects().filter(p => p.legalEntityId === entityId);
 }
 
 export function grantProjectAccess(projectId: string, userId: string, accessLevel: 'read' | 'write' | 'admin', grantedBy: string): ProjectAccess {

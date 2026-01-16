@@ -9,15 +9,13 @@ import {
   createLegalEntity,
   updateLegalEntity,
   deleteLegalEntity,
-  getProjects,
-  type LegalEntity,
-  type Project
+  getProjectsByLegalEntity,
+  type LegalEntity
 } from '@/lib/project-manager';
 
 export default function LegalEntityManager() {
   const { toast } = useToast();
   const [entities, setEntities] = useState<LegalEntity[]>([]);
-  const [projects, setProjects] = useState<Project[]>([]);
   const [showAddEntity, setShowAddEntity] = useState(false);
   const [editingEntity, setEditingEntity] = useState<LegalEntity | null>(null);
   const [newEntity, setNewEntity] = useState({
@@ -29,8 +27,7 @@ export default function LegalEntityManager() {
     actualAddress: '',
     directorName: '',
     phone: '',
-    email: '',
-    projectId: ''
+    email: ''
   });
 
   useEffect(() => {
@@ -39,7 +36,6 @@ export default function LegalEntityManager() {
 
   const loadData = () => {
     setEntities(getLegalEntities());
-    setProjects(getProjects());
   };
 
   const handleAddEntity = () => {
@@ -47,15 +43,6 @@ export default function LegalEntityManager() {
       toast({
         title: 'Ошибка',
         description: 'Заполните обязательные поля: название и ИНН',
-        variant: 'destructive'
-      });
-      return;
-    }
-
-    if (!newEntity.projectId) {
-      toast({
-        title: 'Ошибка',
-        description: 'Выберите проект',
         variant: 'destructive'
       });
       return;
@@ -70,8 +57,7 @@ export default function LegalEntityManager() {
       actualAddress: newEntity.actualAddress,
       directorName: newEntity.directorName,
       phone: newEntity.phone,
-      email: newEntity.email,
-      projectId: newEntity.projectId
+      email: newEntity.email
     });
 
     setNewEntity({
@@ -83,8 +69,7 @@ export default function LegalEntityManager() {
       actualAddress: '',
       directorName: '',
       phone: '',
-      email: '',
-      projectId: ''
+      email: ''
     });
     setShowAddEntity(false);
     loadData();
@@ -107,8 +92,7 @@ export default function LegalEntityManager() {
       actualAddress: editingEntity.actualAddress,
       directorName: editingEntity.directorName,
       phone: editingEntity.phone,
-      email: editingEntity.email,
-      projectId: editingEntity.projectId
+      email: editingEntity.email
     });
 
     setEditingEntity(null);
@@ -121,6 +105,14 @@ export default function LegalEntityManager() {
   };
 
   const handleDeleteEntity = (entityId: string) => {
+    const projects = getProjectsByLegalEntity(entityId);
+    
+    if (projects.length > 0) {
+      if (!confirm(`К этому юрлицу привязано проектов: ${projects.length}. При удалении связь с проектами будет разорвана. Продолжить?`)) {
+        return;
+      }
+    }
+    
     if (confirm('Удалить юридическое лицо?')) {
       deleteLegalEntity(entityId);
       loadData();
@@ -130,19 +122,6 @@ export default function LegalEntityManager() {
       });
     }
   };
-
-  const getProjectName = (projectId: string) => {
-    const project = projects.find(p => p.id === projectId);
-    return project ? project.title : 'Проект не найден';
-  };
-
-  const groupedEntities = entities.reduce((acc, entity) => {
-    if (!acc[entity.projectId]) {
-      acc[entity.projectId] = [];
-    }
-    acc[entity.projectId].push(entity);
-    return acc;
-  }, {} as Record<string, LegalEntity[]>);
 
   return (
     <div className="space-y-6">
@@ -158,21 +137,6 @@ export default function LegalEntityManager() {
         <Card className="p-6 space-y-4 border-2 border-primary/20">
           <h3 className="font-semibold">Новое юридическое лицо</h3>
           <div className="grid grid-cols-2 gap-4">
-            <div className="col-span-2">
-              <label className="block text-sm font-medium mb-2">Проект *</label>
-              <select
-                value={newEntity.projectId}
-                onChange={(e) => setNewEntity({ ...newEntity, projectId: e.target.value })}
-                className="w-full px-3 py-2 border border-input rounded-md bg-background"
-              >
-                <option value="">Выберите проект</option>
-                {projects.map((project) => (
-                  <option key={project.id} value={project.id}>
-                    {project.title}
-                  </option>
-                ))}
-              </select>
-            </div>
             <div className="col-span-2">
               <label className="block text-sm font-medium mb-2">Название *</label>
               <Input
@@ -267,21 +231,6 @@ export default function LegalEntityManager() {
           <h3 className="font-semibold">Редактирование юридического лица</h3>
           <div className="grid grid-cols-2 gap-4">
             <div className="col-span-2">
-              <label className="block text-sm font-medium mb-2">Проект *</label>
-              <select
-                value={editingEntity.projectId}
-                onChange={(e) => setEditingEntity({ ...editingEntity, projectId: e.target.value })}
-                className="w-full px-3 py-2 border border-input rounded-md bg-background"
-              >
-                <option value="">Выберите проект</option>
-                {projects.map((project) => (
-                  <option key={project.id} value={project.id}>
-                    {project.title}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="col-span-2">
               <label className="block text-sm font-medium mb-2">Название *</label>
               <Input
                 value={editingEntity.name}
@@ -370,98 +319,113 @@ export default function LegalEntityManager() {
         </Card>
       )}
 
-      <div className="space-y-6">
-        {Object.keys(groupedEntities).length === 0 ? (
+      <div className="space-y-4">
+        {entities.length === 0 ? (
           <Card className="p-12 text-center">
             <Icon name="Building2" size={48} className="mx-auto mb-4 opacity-20" />
             <p className="text-muted-foreground">Нет юридических лиц</p>
           </Card>
         ) : (
-          Object.entries(groupedEntities).map(([projectId, projectEntities]) => (
-            <div key={projectId}>
-              <div className="flex items-center gap-2 mb-3">
-                <Icon name="FolderOpen" size={20} className="text-orange-600" />
-                <h3 className="text-lg font-semibold">{getProjectName(projectId)}</h3>
-                <span className="text-sm text-gray-500">({projectEntities.length})</span>
-              </div>
-              
-              <div className="grid gap-4">
-                {projectEntities.map((entity) => (
-                  <Card key={entity.id} className="p-6">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <h4 className="text-lg font-semibold mb-2">{entity.name}</h4>
-                        <div className="grid md:grid-cols-2 gap-2 text-sm">
-                          <div>
-                            <span className="text-gray-500">ИНН:</span>
-                            <span className="ml-2 font-medium">{entity.inn}</span>
-                          </div>
-                          {entity.kpp && (
-                            <div>
-                              <span className="text-gray-500">КПП:</span>
-                              <span className="ml-2 font-medium">{entity.kpp}</span>
+          entities.map((entity) => {
+            const projects = getProjectsByLegalEntity(entity.id);
+            
+            return (
+              <Card key={entity.id} className="p-6">
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-2">
+                      <h4 className="text-lg font-semibold">{entity.name}</h4>
+                      {projects.length > 0 && (
+                        <span className="px-2 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-600">
+                          {projects.length} {projects.length === 1 ? 'проект' : 'проектов'}
+                        </span>
+                      )}
+                    </div>
+                    <div className="grid md:grid-cols-2 gap-2 text-sm">
+                      <div>
+                        <span className="text-gray-500">ИНН:</span>
+                        <span className="ml-2 font-medium">{entity.inn}</span>
+                      </div>
+                      {entity.kpp && (
+                        <div>
+                          <span className="text-gray-500">КПП:</span>
+                          <span className="ml-2 font-medium">{entity.kpp}</span>
+                        </div>
+                      )}
+                      {entity.ogrn && (
+                        <div>
+                          <span className="text-gray-500">ОГРН:</span>
+                          <span className="ml-2 font-medium">{entity.ogrn}</span>
+                        </div>
+                      )}
+                      {entity.directorName && (
+                        <div>
+                          <span className="text-gray-500">Директор:</span>
+                          <span className="ml-2 font-medium">{entity.directorName}</span>
+                        </div>
+                      )}
+                      {entity.phone && (
+                        <div>
+                          <span className="text-gray-500">Телефон:</span>
+                          <span className="ml-2 font-medium">{entity.phone}</span>
+                        </div>
+                      )}
+                      {entity.email && (
+                        <div>
+                          <span className="text-gray-500">Email:</span>
+                          <span className="ml-2 font-medium">{entity.email}</span>
+                        </div>
+                      )}
+                      {entity.legalAddress && (
+                        <div className="col-span-2">
+                          <span className="text-gray-500">Юр. адрес:</span>
+                          <span className="ml-2">{entity.legalAddress}</span>
+                        </div>
+                      )}
+                      {entity.actualAddress && (
+                        <div className="col-span-2">
+                          <span className="text-gray-500">Факт. адрес:</span>
+                          <span className="ml-2">{entity.actualAddress}</span>
+                        </div>
+                      )}
+                    </div>
+                    
+                    {projects.length > 0 && (
+                      <div className="mt-3 pt-3 border-t">
+                        <p className="text-sm font-medium text-gray-700 mb-2">
+                          <Icon name="FolderOpen" size={14} className="inline mr-1" />
+                          Используется в проектах:
+                        </p>
+                        <div className="space-y-1">
+                          {projects.map((project) => (
+                            <div key={project.id} className="text-sm text-gray-600 pl-5">
+                              • {project.title}
                             </div>
-                          )}
-                          {entity.ogrn && (
-                            <div>
-                              <span className="text-gray-500">ОГРН:</span>
-                              <span className="ml-2 font-medium">{entity.ogrn}</span>
-                            </div>
-                          )}
-                          {entity.directorName && (
-                            <div>
-                              <span className="text-gray-500">Директор:</span>
-                              <span className="ml-2 font-medium">{entity.directorName}</span>
-                            </div>
-                          )}
-                          {entity.phone && (
-                            <div>
-                              <span className="text-gray-500">Телефон:</span>
-                              <span className="ml-2 font-medium">{entity.phone}</span>
-                            </div>
-                          )}
-                          {entity.email && (
-                            <div>
-                              <span className="text-gray-500">Email:</span>
-                              <span className="ml-2 font-medium">{entity.email}</span>
-                            </div>
-                          )}
-                          {entity.legalAddress && (
-                            <div className="col-span-2">
-                              <span className="text-gray-500">Юр. адрес:</span>
-                              <span className="ml-2">{entity.legalAddress}</span>
-                            </div>
-                          )}
-                          {entity.actualAddress && (
-                            <div className="col-span-2">
-                              <span className="text-gray-500">Факт. адрес:</span>
-                              <span className="ml-2">{entity.actualAddress}</span>
-                            </div>
-                          )}
+                          ))}
                         </div>
                       </div>
-                      <div className="flex gap-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => setEditingEntity(entity)}
-                        >
-                          <Icon name="Edit" size={16} />
-                        </Button>
-                        <Button
-                          variant="destructive"
-                          size="sm"
-                          onClick={() => handleDeleteEntity(entity.id)}
-                        >
-                          <Icon name="Trash2" size={16} />
-                        </Button>
-                      </div>
-                    </div>
-                  </Card>
-                ))}
-              </div>
-            </div>
-          ))
+                    )}
+                  </div>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setEditingEntity(entity)}
+                    >
+                      <Icon name="Edit" size={16} />
+                    </Button>
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => handleDeleteEntity(entity.id)}
+                    >
+                      <Icon name="Trash2" size={16} />
+                    </Button>
+                  </div>
+                </div>
+              </Card>
+            );
+          })
         )}
       </div>
     </div>

@@ -9,8 +9,10 @@ import {
   createProject,
   updateProject,
   deleteProject,
-  getLegalEntitiesByProject,
-  type Project
+  getLegalEntities,
+  getLegalEntityById,
+  type Project,
+  type LegalEntity
 } from '@/lib/project-manager';
 import ProjectAccessManager from './ProjectAccessManager';
 import SystemManager from './SystemManager';
@@ -18,6 +20,7 @@ import SystemManager from './SystemManager';
 export default function ProjectManager() {
   const { toast } = useToast();
   const [projects, setProjects] = useState<Project[]>([]);
+  const [legalEntities, setLegalEntities] = useState<LegalEntity[]>([]);
   const [showAddProject, setShowAddProject] = useState(false);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
@@ -31,15 +34,16 @@ export default function ProjectManager() {
     startDate: '',
     endDate: '',
     budget: '',
-    legalEntityId: null as string | null
+    legalEntityId: ''
   });
 
   useEffect(() => {
-    loadProjects();
+    loadData();
   }, []);
 
-  const loadProjects = () => {
+  const loadData = () => {
     setProjects(getProjects());
+    setLegalEntities(getLegalEntities());
   };
 
   const filteredProjects = projects.filter((project) => {
@@ -66,7 +70,7 @@ export default function ProjectManager() {
       startDate: newProject.startDate || null,
       endDate: newProject.endDate || null,
       budget: newProject.budget ? parseFloat(newProject.budget) : null,
-      legalEntityId: newProject.legalEntityId
+      legalEntityId: newProject.legalEntityId || null
     });
 
     setNewProject({
@@ -76,10 +80,10 @@ export default function ProjectManager() {
       startDate: '',
       endDate: '',
       budget: '',
-      legalEntityId: null
+      legalEntityId: ''
     });
     setShowAddProject(false);
-    loadProjects();
+    loadData();
     
     toast({
       title: 'Успех',
@@ -101,7 +105,7 @@ export default function ProjectManager() {
     });
 
     setEditingProject(null);
-    loadProjects();
+    loadData();
     
     toast({
       title: 'Успех',
@@ -110,9 +114,9 @@ export default function ProjectManager() {
   };
 
   const handleDeleteProject = (projectId: string) => {
-    if (confirm('Удалить проект? Это также удалит все связанные юрлица и доступы.')) {
+    if (confirm('Удалить проект? Это также удалит все связанные системы и доступы.')) {
       deleteProject(projectId);
-      loadProjects();
+      loadData();
       toast({
         title: 'Успех',
         description: 'Проект удален'
@@ -228,17 +232,13 @@ export default function ProjectManager() {
                   <span className="ml-2">{selectedProject.budget.toLocaleString()} ₽</span>
                 </div>
               )}
-              {(() => {
-                const entities = getLegalEntitiesByProject(selectedProject.id);
-                return entities.length > 0 && (
+              {selectedProject.legalEntityId && (() => {
+                const entity = getLegalEntityById(selectedProject.legalEntityId);
+                return entity && (
                   <div>
-                    <div className="text-sm font-medium text-gray-500 mb-2">Юридические лица:</div>
-                    <div className="space-y-1 pl-4">
-                      {entities.map((entity) => (
-                        <div key={entity.id} className="text-sm">
-                          • {entity.name} <span className="text-gray-400">(ИНН: {entity.inn})</span>
-                        </div>
-                      ))}
+                    <span className="text-sm font-medium text-gray-500">Юридическое лицо:</span>
+                    <div className="ml-2 inline-block">
+                      {entity.name} <span className="text-gray-400">(ИНН: {entity.inn})</span>
                     </div>
                   </div>
                 );
@@ -353,6 +353,21 @@ export default function ProjectManager() {
               </select>
             </div>
             <div>
+              <label className="block text-sm font-medium mb-2">Юридическое лицо</label>
+              <select
+                value={newProject.legalEntityId}
+                onChange={(e) => setNewProject({ ...newProject, legalEntityId: e.target.value })}
+                className="w-full px-3 py-2 border border-input rounded-md bg-background"
+              >
+                <option value="">Не выбрано</option>
+                {legalEntities.map((entity) => (
+                  <option key={entity.id} value={entity.id}>
+                    {entity.name} (ИНН: {entity.inn})
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
               <label className="block text-sm font-medium mb-2">Дата начала</label>
               <Input
                 type="date"
@@ -425,6 +440,21 @@ export default function ProjectManager() {
               </select>
             </div>
             <div>
+              <label className="block text-sm font-medium mb-2">Юридическое лицо</label>
+              <select
+                value={editingProject.legalEntityId || ''}
+                onChange={(e) => setEditingProject({ ...editingProject, legalEntityId: e.target.value || null })}
+                className="w-full px-3 py-2 border border-input rounded-md bg-background"
+              >
+                <option value="">Не выбрано</option>
+                {legalEntities.map((entity) => (
+                  <option key={entity.id} value={entity.id}>
+                    {entity.name} (ИНН: {entity.inn})
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
               <label className="block text-sm font-medium mb-2">Дата начала</label>
               <Input
                 type="date"
@@ -472,7 +502,7 @@ export default function ProjectManager() {
           </Card>
         ) : (
           filteredProjects.map((project) => {
-            const entities = getLegalEntitiesByProject(project.id);
+            const legalEntity = getLegalEntityById(project.legalEntityId);
             
             return (
               <Card key={project.id} className="p-6">
@@ -509,19 +539,12 @@ export default function ProjectManager() {
                       )}
                     </div>
 
-                    {entities.length > 0 && (
+                    {legalEntity && (
                       <div className="mt-3 pt-3 border-t">
-                        <p className="text-sm font-medium text-gray-700 mb-2">
+                        <p className="text-sm text-gray-600">
                           <Icon name="Building2" size={14} className="inline mr-1" />
-                          Юридические лица ({entities.length}):
+                          <span className="font-medium">Юрлицо:</span> {legalEntity.name} <span className="text-gray-400">(ИНН: {legalEntity.inn})</span>
                         </p>
-                        <div className="space-y-1">
-                          {entities.map((entity) => (
-                            <div key={entity.id} className="text-sm text-gray-600 pl-5">
-                              • {entity.name} <span className="text-gray-400">(ИНН: {entity.inn})</span>
-                            </div>
-                          ))}
-                        </div>
                       </div>
                     )}
                   </div>
