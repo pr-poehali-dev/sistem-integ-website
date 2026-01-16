@@ -188,6 +188,16 @@ const certificates = [
 
 export default function Index() {
   const [selectedSolution, setSelectedSolution] = useState<string | null>(null);
+  const [selectedYear, setSelectedYear] = useState<string>('all');
+  const [showAllProjects, setShowAllProjects] = useState(false);
+
+  const years = ['all', ...Array.from(new Set(portfolio.map(p => p.year)))].sort().reverse();
+  
+  const filteredPortfolio = selectedYear === 'all' 
+    ? portfolio 
+    : portfolio.filter(p => p.year === selectedYear);
+  
+  const displayedProjects = showAllProjects ? filteredPortfolio : filteredPortfolio.slice(0, 3);
 
   return (
     <div className="min-h-screen bg-background">
@@ -347,12 +357,30 @@ export default function Index() {
             </p>
           </div>
 
+          {/* Filter by year */}
+          <div className="flex flex-wrap gap-3 justify-center mb-12">
+            {years.map((year) => (
+              <Button
+                key={year}
+                variant={selectedYear === year ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => {
+                  setSelectedYear(year);
+                  setShowAllProjects(false);
+                }}
+                className="transition-all duration-300"
+              >
+                {year === 'all' ? 'Все проекты' : year}
+              </Button>
+            ))}
+          </div>
+
           <div className="relative">
             {/* Timeline line */}
             <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-primary via-primary/50 to-transparent hidden md:block"></div>
             
             <div className="space-y-8">
-              {portfolio.map((project, index) => (
+              {displayedProjects.map((project, index) => (
                 <div key={index} className="relative animate-slide-up" style={{ animationDelay: `${index * 0.1}s` }}>
                   {/* Timeline dot */}
                   <div className="absolute left-8 top-8 w-4 h-4 rounded-full bg-primary border-4 border-background shadow-lg hidden md:block transform -translate-x-1/2"></div>
@@ -398,6 +426,25 @@ export default function Index() {
               ))}
             </div>
           </div>
+
+          {/* Show All Button */}
+          {filteredPortfolio.length > 3 && (
+            <div className="text-center mt-12">
+              <Button 
+                size="lg" 
+                variant={showAllProjects ? "outline" : "default"}
+                onClick={() => setShowAllProjects(!showAllProjects)}
+                className="gap-2 group"
+              >
+                <Icon 
+                  name={showAllProjects ? "ChevronUp" : "ChevronDown"} 
+                  size={20} 
+                  className="group-hover:translate-y-1 transition-transform"
+                />
+                {showAllProjects ? 'Скрыть проекты' : `Показать все проекты (${filteredPortfolio.length})`}
+              </Button>
+            </div>
+          )}
         </div>
       </section>
 
