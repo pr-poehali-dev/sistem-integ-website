@@ -10,6 +10,9 @@ import {
   updateTemplate,
   deleteTemplate,
   duplicateTemplate,
+  exportTemplate,
+  exportAllTemplates,
+  importTemplates,
   type TitlePageTemplate
 } from '@/lib/title-page-template-manager';
 
@@ -157,6 +160,80 @@ export default function TemplateManager({ onSelectTemplate, onClose }: TemplateM
     onClose();
   };
 
+  const handleExport = (templateId: string) => {
+    const template = templates.find(t => t.id === templateId);
+    if (!template) return;
+
+    const jsonData = exportTemplate(templateId);
+    if (!jsonData) return;
+
+    const blob = new Blob([jsonData], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `template_${template.name.replace(/\s+/g, '_')}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    toast({
+      title: 'Успех',
+      description: `Шаблон "${template.name}" экспортирован`
+    });
+  };
+
+  const handleExportAll = () => {
+    const jsonData = exportAllTemplates();
+    const blob = new Blob([jsonData], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `all_templates_${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    const userTemplatesCount = templates.filter(t => !t.isDefault).length;
+    toast({
+      title: 'Успех',
+      description: `Экспортировано шаблонов: ${userTemplatesCount}`
+    });
+  };
+
+  const handleImport = () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+    input.onchange = (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const jsonData = event.target?.result as string;
+        const result = importTemplates(jsonData);
+
+        if (result.success) {
+          loadTemplates();
+          toast({
+            title: 'Импорт завершен',
+            description: `Импортировано: ${result.imported}, Пропущено: ${result.skipped}`
+          });
+        } else {
+          toast({
+            title: 'Ошибка импорта',
+            description: result.errors.join(', '),
+            variant: 'destructive'
+          });
+        }
+      };
+      reader.readAsText(file);
+    };
+    input.click();
+  };
+
   const filteredTemplates = templates.filter(template => {
     const searchLower = searchQuery.toLowerCase();
     return template.name.toLowerCase().includes(searchLower) ||
@@ -167,16 +244,26 @@ export default function TemplateManager({ onSelectTemplate, onClose }: TemplateM
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 overflow-auto">
       <Card className="w-full max-w-6xl bg-white max-h-[90vh] overflow-auto">
-        <div className="sticky top-0 bg-white border-b p-4 flex justify-between items-center z-10">
-          <h3 className="text-lg font-semibold">Управление шаблонами</h3>
-          <div className="flex gap-2">
-            <Button onClick={() => setShowAddTemplate(!showAddTemplate)} variant="default">
-              <Icon name="Plus" size={16} className="mr-2" />
-              Создать шаблон
-            </Button>
+        <div className="sticky top-0 bg-white border-b p-4 z-10">
+          <div className="flex justify-between items-center mb-3">
+            <h3 className="text-lg font-semibold">Управление шаблонами</h3>
             <Button onClick={onClose} variant="outline">
               <Icon name="X" size={16} className="mr-2" />
               Закрыть
+            </Button>
+          </div>
+          <div className="flex gap-2 flex-wrap">
+            <Button onClick={() => setShowAddTemplate(!showAddTemplate)} variant="default">
+              <Icon name="Plus" size={16} className="mr-2" />
+              Создать
+            </Button>
+            <Button onClick={handleImport} variant="outline">
+              <Icon name="Upload" size={16} className="mr-2" />
+              Импорт
+            </Button>
+            <Button onClick={handleExportAll} variant="outline">
+              <Icon name="Download" size={16} className="mr-2" />
+              Экспорт всех
             </Button>
           </div>
         </div>
@@ -331,42 +418,52 @@ export default function TemplateManager({ onSelectTemplate, onClose }: TemplateM
                     <div>Год: {template.year}</div>
                   </div>
 
-                  <div className="flex gap-1 flex-wrap">
-                    <Button
-                      size="sm"
-                      onClick={() => handleSelect(template)}
-                      className="flex-1"
-                    >
-                      <Icon name="Check" size={14} className="mr-1" />
-                      Применить
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => handleDuplicate(template.id)}
-                      title="Создать копию"
-                    >
-                      <Icon name="Copy" size={14} />
-                    </Button>
+                  <div className="space-y-2">
+                    <div className="flex gap-1 flex-wrap">
+                      <Button
+                        size="sm"
+                        onClick={() => handleSelect(template)}
+                        className="flex-1"
+                      >
+                        <Icon name="Check" size={14} className="mr-1" />
+                        Применить
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleDuplicate(template.id)}
+                        title="Создать копию"
+                      >
+                        <Icon name="Copy" size={14} />
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleExport(template.id)}
+                        title="Экспортировать"
+                      >
+                        <Icon name="Download" size={14} />
+                      </Button>
+                    </div>
                     {!template.isDefault && (
-                      <>
+                      <div className="flex gap-1">
                         <Button
                           size="sm"
                           variant="outline"
                           onClick={() => handleEdit(template)}
-                          title="Редактировать"
+                          className="flex-1"
                         >
-                          <Icon name="Edit" size={14} />
+                          <Icon name="Edit" size={14} className="mr-1" />
+                          Редактировать
                         </Button>
                         <Button
                           size="sm"
                           variant="outline"
                           onClick={() => handleDelete(template.id)}
-                          title="Удалить"
                         >
                           <Icon name="Trash2" size={14} />
                         </Button>
-                      </>
+                      </div>
                     )}
                   </div>
 

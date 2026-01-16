@@ -126,3 +126,127 @@ export function duplicateTemplate(templateId: string, newName: string): TitlePag
     chiefEngineerPosition: template.chiefEngineerPosition
   });
 }
+
+export function exportTemplate(templateId: string): string | null {
+  const template = getTemplateById(templateId);
+  if (!template) return null;
+  
+  const exportData = {
+    version: '1.0',
+    exportDate: new Date().toISOString(),
+    template: {
+      name: template.name,
+      description: template.description,
+      documentTitle: template.documentTitle,
+      city: template.city,
+      year: template.year,
+      approvedBy: template.approvedBy,
+      developerPosition: template.developerPosition,
+      chiefEngineerPosition: template.chiefEngineerPosition
+    }
+  };
+  
+  return JSON.stringify(exportData, null, 2);
+}
+
+export function exportAllTemplates(): string {
+  const templates = getTemplates().filter(t => !t.isDefault);
+  
+  const exportData = {
+    version: '1.0',
+    exportDate: new Date().toISOString(),
+    templates: templates.map(t => ({
+      name: t.name,
+      description: t.description,
+      documentTitle: t.documentTitle,
+      city: t.city,
+      year: t.year,
+      approvedBy: t.approvedBy,
+      developerPosition: t.developerPosition,
+      chiefEngineerPosition: t.chiefEngineerPosition
+    }))
+  };
+  
+  return JSON.stringify(exportData, null, 2);
+}
+
+export interface ImportResult {
+  success: boolean;
+  imported: number;
+  skipped: number;
+  errors: string[];
+}
+
+export function importTemplates(jsonData: string): ImportResult {
+  const result: ImportResult = {
+    success: false,
+    imported: 0,
+    skipped: 0,
+    errors: []
+  };
+
+  try {
+    const data = JSON.parse(jsonData);
+    
+    if (!data.version || !data.template && !data.templates) {
+      result.errors.push('Неверный формат файла');
+      return result;
+    }
+
+    const existingTemplates = getTemplates();
+    
+    if (data.template) {
+      const existing = existingTemplates.find(t => 
+        t.name === data.template.name && t.documentTitle === data.template.documentTitle
+      );
+      
+      if (existing) {
+        result.skipped++;
+        result.errors.push(`Шаблон "${data.template.name}" уже существует`);
+      } else {
+        createTemplate({
+          name: data.template.name,
+          description: data.template.description || '',
+          documentTitle: data.template.documentTitle,
+          city: data.template.city || '',
+          year: data.template.year || new Date().getFullYear().toString(),
+          approvedBy: data.template.approvedBy || '',
+          developerPosition: data.template.developerPosition || 'Производитель работ',
+          chiefEngineerPosition: data.template.chiefEngineerPosition || 'Главный инженер'
+        });
+        result.imported++;
+      }
+    }
+    
+    if (data.templates && Array.isArray(data.templates)) {
+      for (const template of data.templates) {
+        const existing = existingTemplates.find(t => 
+          t.name === template.name && t.documentTitle === template.documentTitle
+        );
+        
+        if (existing) {
+          result.skipped++;
+        } else {
+          createTemplate({
+            name: template.name,
+            description: template.description || '',
+            documentTitle: template.documentTitle,
+            city: template.city || '',
+            year: template.year || new Date().getFullYear().toString(),
+            approvedBy: template.approvedBy || '',
+            developerPosition: template.developerPosition || 'Производитель работ',
+            chiefEngineerPosition: template.chiefEngineerPosition || 'Главный инженер'
+          });
+          result.imported++;
+        }
+      }
+    }
+    
+    result.success = result.imported > 0;
+    
+  } catch (error) {
+    result.errors.push('Ошибка чтения файла: ' + (error as Error).message);
+  }
+
+  return result;
+}
