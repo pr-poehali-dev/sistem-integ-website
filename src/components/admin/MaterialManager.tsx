@@ -94,14 +94,32 @@ export default function MaterialManager() {
     }
   };
 
+  const calculateAveragePrice = (results: ProductSearchResult[]): string => {
+    const prices = results
+      .map(r => r.price)
+      .filter(p => p && p.length > 0)
+      .map(p => {
+        const numStr = p.replace(/[^\d.,]/g, '').replace(',', '.');
+        return parseFloat(numStr);
+      })
+      .filter(p => !isNaN(p) && p > 0);
+
+    if (prices.length === 0) return '';
+    
+    const average = prices.reduce((sum, price) => sum + price, 0) / prices.length;
+    return average.toFixed(2);
+  };
+
   const handleSelectSearchResult = (result: ProductSearchResult) => {
+    const averagePrice = calculateAveragePrice(searchResults);
+    
     if (activeArticleInput === 'new') {
       setNewMaterial({
         ...newMaterial,
         name: result.title,
         description: result.description,
         manufacturer: result.manufacturer || newMaterial.manufacturer,
-        price: result.price || newMaterial.price
+        price: averagePrice || newMaterial.price
       });
     } else if (activeArticleInput === 'edit' && editingMaterial) {
       setEditingMaterial({
@@ -109,7 +127,7 @@ export default function MaterialManager() {
         name: result.title,
         description: result.description,
         manufacturer: result.manufacturer || editingMaterial.manufacturer,
-        price: result.price ? parseFloat(result.price) : editingMaterial.price
+        price: averagePrice ? parseFloat(averagePrice) : editingMaterial.price
       });
     }
 
@@ -118,7 +136,9 @@ export default function MaterialManager() {
     
     toast({
       title: 'Данные заполнены',
-      description: 'Информация из результата поиска добавлена в форму'
+      description: averagePrice 
+        ? `Информация добавлена. Средняя цена: ${parseFloat(averagePrice).toLocaleString()} ₽`
+        : 'Информация из результата поиска добавлена в форму'
     });
   };
 
@@ -383,10 +403,17 @@ export default function MaterialManager() {
             <div ref={searchResultsRef} className="absolute top-full left-0 right-0 mt-2 z-50">
               <Card className="p-4 shadow-lg border-2 border-orange-200">
                 <div className="flex items-center justify-between mb-3">
-                  <h4 className="font-semibold flex items-center gap-2">
-                    <Icon name="Search" size={16} />
-                    Результаты поиска по артикулу
-                  </h4>
+                  <div>
+                    <h4 className="font-semibold flex items-center gap-2">
+                      <Icon name="Search" size={16} />
+                      Результаты поиска по артикулу
+                    </h4>
+                    {searchResults.length > 0 && calculateAveragePrice(searchResults) && (
+                      <p className="text-xs text-gray-600 mt-1">
+                        Средняя цена: <span className="font-semibold text-green-600">{parseFloat(calculateAveragePrice(searchResults)).toLocaleString()} ₽</span>
+                      </p>
+                    )}
+                  </div>
                   <Button variant="ghost" size="sm" onClick={() => setShowSearchResults(false)}>
                     <Icon name="X" size={16} />
                   </Button>
@@ -558,10 +585,17 @@ export default function MaterialManager() {
             <div ref={searchResultsRef} className="absolute top-full left-0 right-0 mt-2 z-50">
               <Card className="p-4 shadow-lg border-2 border-orange-200">
                 <div className="flex items-center justify-between mb-3">
-                  <h4 className="font-semibold flex items-center gap-2">
-                    <Icon name="Search" size={16} />
-                    Результаты поиска по артикулу
-                  </h4>
+                  <div>
+                    <h4 className="font-semibold flex items-center gap-2">
+                      <Icon name="Search" size={16} />
+                      Результаты поиска по артикулу
+                    </h4>
+                    {searchResults.length > 0 && calculateAveragePrice(searchResults) && (
+                      <p className="text-xs text-gray-600 mt-1">
+                        Средняя цена: <span className="font-semibold text-green-600">{parseFloat(calculateAveragePrice(searchResults)).toLocaleString()} ₽</span>
+                      </p>
+                    )}
+                  </div>
                   <Button variant="ghost" size="sm" onClick={() => setShowSearchResults(false)}>
                     <Icon name="X" size={16} />
                   </Button>
