@@ -109,7 +109,7 @@ export default function PrivacyPolicy() {
                 <p><strong>ООО Компания "Системкрафт"</strong></p>
                 <p>Адрес: г. Екатеринбург, ул. Крестинского, 46А, офис 702</p>
                 <p>Email: info@systemcraft.ru</p>
-                <p>Телефон: +7 (343) 000-00-00</p>
+                <p>Телефон: +7 (343) 379-98-88</p>
               </div>
             </section>
 
