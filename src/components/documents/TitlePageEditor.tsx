@@ -13,6 +13,8 @@ import {
   type TitlePage
 } from '@/lib/title-page-manager';
 import TitlePagePreview from './TitlePagePreview';
+import TemplateManager from './TemplateManager';
+import { type TitlePageTemplate } from '@/lib/title-page-template-manager';
 
 export default function TitlePageEditor() {
   const { toast } = useToast();
@@ -22,6 +24,7 @@ export default function TitlePageEditor() {
   const [editingPage, setEditingPage] = useState<TitlePage | null>(null);
   const [showPreview, setShowPreview] = useState(false);
   const [previewPage, setPreviewPage] = useState<TitlePage | null>(null);
+  const [showTemplates, setShowTemplates] = useState(false);
 
   const [formData, setFormData] = useState({
     documentTitle: 'ИСПОЛНИТЕЛЬНАЯ ДОКУМЕНТАЦИЯ',
@@ -147,6 +150,23 @@ export default function TitlePageEditor() {
     setShowPreview(true);
   };
 
+  const handleApplyTemplate = (template: TitlePageTemplate) => {
+    setFormData({
+      ...formData,
+      documentTitle: template.documentTitle,
+      city: template.city,
+      year: template.year,
+      approvedBy: template.approvedBy,
+      developerPosition: template.developerPosition,
+      chiefEngineerPosition: template.chiefEngineerPosition
+    });
+
+    toast({
+      title: 'Шаблон применен',
+      description: `Шаблон "${template.name}" применен к форме`
+    });
+  };
+
   const getProjectName = (projectId: string) => {
     const project = projects.find(p => p.id === projectId);
     return project ? project.title : '';
@@ -156,6 +176,10 @@ export default function TitlePageEditor() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold">Титульные листы исполнительной документации</h2>
+        <Button onClick={() => setShowTemplates(true)} variant="outline">
+          <Icon name="FileText" size={16} className="mr-2" />
+          Шаблоны
+        </Button>
       </div>
 
       <Card className="p-4">
@@ -179,9 +203,21 @@ export default function TitlePageEditor() {
 
       {selectedProjectId && (
         <Card className="p-6">
-          <h3 className="text-lg font-semibold mb-4">
-            {editingPage ? 'Редактировать титульный лист' : 'Создать титульный лист'}
-          </h3>
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-lg font-semibold">
+              {editingPage ? 'Редактировать титульный лист' : 'Создать титульный лист'}
+            </h3>
+            {!editingPage && (
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => setShowTemplates(true)}
+              >
+                <Icon name="Wand2" size={14} className="mr-2" />
+                Использовать шаблон
+              </Button>
+            )}
+          </div>
 
           <div className="grid md:grid-cols-2 gap-4 mb-4">
             <div className="md:col-span-2">
@@ -358,6 +394,13 @@ export default function TitlePageEditor() {
           page={previewPage}
           projectName={getProjectName(previewPage.projectId)}
           onClose={() => setShowPreview(false)}
+        />
+      )}
+
+      {showTemplates && (
+        <TemplateManager
+          onSelectTemplate={handleApplyTemplate}
+          onClose={() => setShowTemplates(false)}
         />
       )}
     </div>
