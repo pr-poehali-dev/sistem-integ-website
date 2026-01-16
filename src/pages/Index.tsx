@@ -527,18 +527,29 @@ export default function Index() {
             </div>
             <div>
               <h4 className="font-heading font-semibold mb-4">Контакты</h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li className="flex items-center gap-2">
-                  <Icon name="Phone" size={14} />
-                  +7 (495) 123-45-67
+              <ul className="space-y-3 text-sm text-muted-foreground">
+                <li>
+                  <a href="tel:+73433799888" className="flex items-center gap-2 hover:text-primary transition-colors">
+                    <Icon name="Phone" size={14} />
+                    <div>
+                      <div>+7 (343) 379-98-88</div>
+                      <div className="text-xs opacity-70">Многоканальный</div>
+                    </div>
+                  </a>
                 </li>
-                <li className="flex items-center gap-2">
-                  <Icon name="Mail" size={14} />
-                  info@systemcraft.ru
+                <li>
+                  <a href="mailto:info@systemcraft.ru" className="flex items-center gap-2 hover:text-primary transition-colors">
+                    <Icon name="Mail" size={14} />
+                    info@systemcraft.ru
+                  </a>
                 </li>
-                <li className="flex items-center gap-2">
-                  <Icon name="MapPin" size={14} />
-                  Москва, ул. Примерная, 123
+                <li className="flex items-start gap-2">
+                  <Icon name="MapPin" size={14} className="mt-0.5" />
+                  <div>
+                    г. Екатеринбург,<br />
+                    ул. Крестинского, 46А,<br />
+                    офис 702
+                  </div>
                 </li>
               </ul>
             </div>
