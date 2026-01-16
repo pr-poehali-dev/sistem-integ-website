@@ -1,3 +1,24 @@
+# robots.txt для systemcraft.ru
+
+User-agent: *
+Allow: /
+
+# Запрещаем индексацию админки и служебных страниц
+Disallow: /admin
+Disallow: /admin/
+
+# Разрешаем основные страницы
+Allow: /
+Allow: /privacy-policy
+
+# Путь к sitemap
+Sitemap: https://systemcraft.ru/sitemap.xml
+
+# Яндекс
+User-agent: Yandex
+Allow: /
+
+# Google
 User-agent: Googlebot
 Allow: /
 
@@ -10,5 +31,5 @@ Allow: /
 User-agent: facebookexternalhit
 Allow: /
 
-User-agent: *
-Allow: /
+# Время задержки между запросами (в секундах)
+Crawl-delay: 1
