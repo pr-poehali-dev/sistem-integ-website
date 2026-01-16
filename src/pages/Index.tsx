@@ -6,8 +6,11 @@ import AdvantagesSection from '@/components/sections/AdvantagesSection';
 import PortfolioSection from '@/components/sections/PortfolioSection';
 import CertificatesSection from '@/components/sections/CertificatesSection';
 import ContactSection from '@/components/sections/ContactSection';
+import TelegramButton from '@/components/TelegramButton';
+import ScrollToTop from '@/components/ScrollToTop';
 import { getContent } from '@/lib/content-manager';
 import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 
 export default function Index() {
   const [content, setContent] = useState(getContent().contact);
@@ -52,11 +55,54 @@ export default function Index() {
       </header>
 
       <HeroSection />
-      <SolutionsSection />
-      <AdvantagesSection />
-      <PortfolioSection />
-      <CertificatesSection />
-      <ContactSection />
+      
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.6 }}
+      >
+        <SolutionsSection />
+      </motion.div>
+      
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.6 }}
+      >
+        <AdvantagesSection />
+      </motion.div>
+      
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.6 }}
+      >
+        <PortfolioSection />
+      </motion.div>
+      
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.6 }}
+      >
+        <CertificatesSection />
+      </motion.div>
+      
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.6 }}
+      >
+        <ContactSection />
+      </motion.div>
+      
+      <TelegramButton />
+      <ScrollToTop />
 
       <footer className="border-t border-border/40 py-12 bg-muted/20">
         <div className="container mx-auto px-4">
