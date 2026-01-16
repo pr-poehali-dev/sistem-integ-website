@@ -34,7 +34,7 @@ export default function Index() {
               />
             </div>
             <nav className="hidden md:flex gap-6 items-center">
-              <a href="#solutions" className="text-sm font-medium hover:text-primary transition-colors">Решения</a>
+              <a href="#solutions" className="text-sm font-medium hover:text-primary transition-colors">Системы и сети</a>
               <a href="#portfolio" className="text-sm font-medium hover:text-primary transition-colors">Портфолио</a>
               <a href="#certificates" className="text-sm font-medium hover:text-primary transition-colors">Сертификаты и лицензии</a>
             </nav>
@@ -121,7 +121,7 @@ export default function Index() {
               </p>
             </div>
             <div>
-              <h4 className="font-heading font-semibold mb-4">Решения</h4>
+              <h4 className="font-heading font-semibold mb-4">Системы и сети</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li><a href="#solutions" className="hover:text-primary transition-colors">СКС</a></li>
                 <li><a href="#solutions" className="hover:text-primary transition-colors">САПС</a></li>

@@ -98,7 +98,7 @@ export default function SolutionsSection() {
         <div className="text-center max-w-3xl mx-auto mb-16">
           <Badge variant="outline" className="mb-4">
             <Icon name="Cpu" size={14} className="mr-2" />
-            Решения
+            Системы и сети
           </Badge>
           <h3 className="text-3xl md:text-4xl font-heading font-bold mb-4">
             Инженерные системы под ключ
