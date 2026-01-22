@@ -15,6 +15,7 @@ const UserDashboard = lazy(() => import("./pages/UserDashboard"));
 const UserLogin = lazy(() => import("./components/UserLogin"));
 const Custom404 = lazy(() => import("./pages/Custom404"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
+const CalculatorSAPS = lazy(() => import("./components/CalculatorSAPS"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -45,6 +46,7 @@ const App = () => {
               <Route path="/login" element={<UserLogin />} />
               <Route path="/dashboard" element={<UserDashboard />} />
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+              <Route path="/calculator/saps" element={<CalculatorSAPS />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<Custom404 />} />
             </Routes>

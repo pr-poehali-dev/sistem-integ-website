@@ -40,6 +40,10 @@ export default function Index() {
                 <span>Системы и сети</span>
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full"></span>
               </a>
+              <a href="/calculator/saps" className="px-4 py-2 text-sm font-medium rounded-lg hover:bg-primary/10 hover:text-primary transition-all relative group">
+                <span>Калькулятор</span>
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full"></span>
+              </a>
               <a href="#portfolio" className="px-4 py-2 text-sm font-medium rounded-lg hover:bg-primary/10 hover:text-primary transition-all relative group">
                 <span>Портфолио</span>
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full"></span>
@@ -97,6 +101,13 @@ export default function Index() {
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Системы и сети
+              </a>
+              <a 
+                href="/calculator/saps" 
+                className="px-4 py-3 text-sm font-medium rounded-lg hover:bg-primary/10 hover:text-primary transition-all"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Калькулятор
               </a>
               <a 
                 href="#portfolio" 
