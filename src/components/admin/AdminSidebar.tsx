@@ -1,7 +1,7 @@
 import { Card } from '@/components/ui/card';
 import Icon from '@/components/ui/icon';
 
-type TabId = 'hero' | 'solutions' | 'advantages' | 'portfolio' | 'certificates' | 'contact' | 'images' | 'users' | 'projects' | 'legal-entities' | 'persons' | 'units' | 'banks' | 'materials' | 'works' | 'estimates' | 'calculators';
+type TabId = 'hero' | 'solutions' | 'advantages' | 'portfolio' | 'certificates' | 'contact' | 'images' | 'users' | 'projects' | 'legal-entities' | 'persons' | 'units' | 'banks' | 'materials' | 'works' | 'estimates';
 
 interface AdminSidebarProps {
   activeTab: TabId;
@@ -26,7 +26,6 @@ export default function AdminSidebar({ activeTab, onTabChange }: AdminSidebarPro
     { id: 'materials' as TabId, label: 'Материалы и оборуд.', icon: 'Package' },
     { id: 'works' as TabId, label: 'Работы', icon: 'Wrench' },
     { id: 'estimates' as TabId, label: 'Сметные расчеты', icon: 'FileText' },
-    { id: 'calculators' as TabId, label: 'Калькуляторы', icon: 'Calculator' },
   ];
 
   return (

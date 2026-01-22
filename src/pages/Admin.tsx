@@ -16,7 +16,7 @@ import BankManager from '@/components/admin/BankManager';
 import MaterialManager from '@/components/admin/MaterialManager';
 import WorkManager from '@/components/admin/WorkManager';
 import EstimateManager from '@/components/admin/EstimateManager';
-import CalculatorSettings from '@/components/admin/CalculatorSettings';
+
 import PasswordChangeModal from '@/components/admin/PasswordChangeModal';
 
 
@@ -25,7 +25,7 @@ export default function Admin() {
   const [authenticated, setAuthenticated] = useState(false);
   const [currentUser, setCurrentUser] = useState<{id: string; name: string; role: string} | null>(null);
   const [content, setContent] = useState<SiteContent | null>(null);
-  const [activeTab, setActiveTab] = useState<'hero' | 'solutions' | 'advantages' | 'portfolio' | 'certificates' | 'contact' | 'images' | 'users' | 'projects' | 'legal-entities' | 'persons' | 'units' | 'banks' | 'materials' | 'works' | 'estimates' | 'calculators'>('images');
+  const [activeTab, setActiveTab] = useState<'hero' | 'solutions' | 'advantages' | 'portfolio' | 'certificates' | 'contact' | 'images' | 'users' | 'projects' | 'legal-entities' | 'persons' | 'units' | 'banks' | 'materials' | 'works' | 'estimates'>('images');
   const [showPasswordChange, setShowPasswordChange] = useState(false);
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -170,12 +170,6 @@ export default function Admin() {
             ) : activeTab === 'estimates' ? (
               <div className="text-center py-12 text-muted-foreground">
                 Доступ запрещен. Только администраторы могут управлять сметами.
-              </div>
-            ) : activeTab === 'calculators' && currentUser?.role === 'admin' ? (
-              <CalculatorSettings />
-            ) : activeTab === 'calculators' ? (
-              <div className="text-center py-12 text-muted-foreground">
-                Доступ запрещен. Только администраторы могут управлять настройками калькуляторов.
               </div>
             ) : (
               <AdminContentEditor

@@ -8,7 +8,7 @@ import CertificatesSection from '@/components/sections/CertificatesSection';
 import ContactSection from '@/components/sections/ContactSection';
 import TelegramButton from '@/components/TelegramButton';
 import ScrollToTop from '@/components/ScrollToTop';
-import CalculatorModal from '@/components/CalculatorModal';
+
 import { getContent } from '@/lib/content-manager';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
@@ -16,7 +16,7 @@ import { motion } from 'framer-motion';
 export default function Index() {
   const [content, setContent] = useState(getContent());
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [calculatorOpen, setCalculatorOpen] = useState(false);
+
 
   useEffect(() => {
     const handleUpdate = () => setContent(getContent());
@@ -42,10 +42,7 @@ export default function Index() {
                 <span>Системы и сети</span>
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full"></span>
               </a>
-              <button onClick={() => setCalculatorOpen(true)} className="px-4 py-2 text-sm font-medium rounded-lg hover:bg-primary/10 hover:text-primary transition-all relative group">
-                <span>Калькулятор</span>
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full"></span>
-              </button>
+
               <a href="#portfolio" className="px-4 py-2 text-sm font-medium rounded-lg hover:bg-primary/10 hover:text-primary transition-all relative group">
                 <span>Портфолио</span>
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full"></span>
@@ -104,12 +101,7 @@ export default function Index() {
               >
                 Системы и сети
               </a>
-              <button 
-                onClick={() => { setCalculatorOpen(true); setMobileMenuOpen(false); }}
-                className="px-4 py-3 text-sm font-medium rounded-lg hover:bg-primary/10 hover:text-primary transition-all text-left"
-              >
-                Калькулятор
-              </button>
+
               <a 
                 href="#portfolio" 
                 className="px-4 py-3 text-sm font-medium rounded-lg hover:bg-primary/10 hover:text-primary transition-all"
@@ -292,7 +284,7 @@ export default function Index() {
 
       <TelegramButton />
       <ScrollToTop />
-      <CalculatorModal isOpen={calculatorOpen} onClose={() => setCalculatorOpen(false)} />
+
     </div>
   );
 }
