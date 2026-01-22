@@ -152,7 +152,7 @@ export default function CalculatorModal({ isOpen, onClose }: CalculatorModalProp
                   {selectedSystemData.systemName}
                 </CardTitle>
               </CardHeader>
-            <CardContent className="space-y-6">
+              <CardContent className="space-y-6">
               <div className="grid md:grid-cols-3 gap-4">
                 <div>
                   <label className="block text-sm font-medium mb-2">
@@ -210,6 +210,7 @@ export default function CalculatorModal({ isOpen, onClose }: CalculatorModalProp
               </div>
             </CardContent>
           </Card>
+          )}
 
           {showResult && result && (
             <Card className="border-2 border-orange-200 bg-gradient-to-br from-orange-50 to-white">
